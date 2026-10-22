@@ -1,0 +1,424 @@
+
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>KIANI EXCHANGE</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Vazirmatn:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050505; --panel: #111111; --line: #332b00;
+  --text: #ffffff; --muted: #888888;
+  --gold: #ffcc00; --red: #ff3355; --green: #00ff88; --cyan: #00e5ff;
+  --font-fa: 'Vazirmatn', Tahoma, sans-serif;
+  --font-en: 'Orbitron', sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body {
+  margin:0; padding:0; 
+  background: radial-gradient(circle at 50% 0%, #1a1500 0%, #000000 100%);
+  color: var(--text); font-family: var(--font-fa);
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  overflow-x: hidden; user-select: none;
+}
+
+/* Auth Screen */
+#authScreen {
+  position: fixed; inset: 0; z-index: 1000; 
+  background: radial-gradient(circle at 50% 0%, #1a1500 0%, #000000 100%);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.auth-box {
+  background: linear-gradient(160deg, #1a1a1a, #050505);
+  border: 2px solid var(--gold); border-radius: 24px;
+  padding: 40px 30px; max-width: 400px; width: 100%; text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 30px rgba(255,204,0,0.15);
+  animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.auth-logo {
+  width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--gold), #ff5500, var(--gold));
+  display: grid; place-items: center; position: relative;
+  box-shadow: 0 0 30px rgba(255,204,0,0.4);
+  animation: spinRing 6s linear infinite;
+}
+.auth-logo::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: #050505; }
+.auth-logo span { position: relative; z-index: 2; font-weight: 900; font-size: 32px; color: var(--gold); font-family: var(--font-en); }
+@keyframes spinRing { to { transform: rotate(360deg); } }
+
+.auth-box h2 { color: #fff; margin: 0 0 25px 0; font-family: var(--font-en); font-size: 22px; letter-spacing: 2px; }
+
+/* Header */
+.top-bar {
+  width: 100%; max-width: 600px; display: flex; justify-content: space-between;
+  align-items: center; padding: 10px 15px; background: rgba(0,0,0,0.8);
+  border-bottom: 1px solid var(--line); border-radius: 0 0 16px 16px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.8), 0 0 15px rgba(255,204,0,0.1); backdrop-filter: blur(10px);
+  position: relative; z-index: 10;
+}
+.back-btn { color: var(--gold); text-decoration: none; font-weight: 700; font-size: 14px; }
+.balance-box {
+  background: #000; padding: 6px 12px; border-radius: 12px; border: 1px solid var(--gold);
+  font-family: var(--font-en); font-weight: 900; color: var(--gold); font-size: 16px;
+  box-shadow: inset 0 0 10px rgba(255,204,0,0.3);
+}
+.admin-trigger { background: transparent; border: none; color: #333; font-size: 10px; cursor: pointer; }
+
+/* Tabs & Content */
+.container { width: 100%; max-width: 500px; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+.tabs { display: flex; background: var(--panel); border-radius: 12px; padding: 5px; border: 1px solid var(--line); }
+.tab-btn {
+  flex: 1; background: transparent; border: none; color: var(--muted); padding: 12px;
+  font-weight: 700; font-size: 16px; font-family: var(--font-fa); cursor: pointer; border-radius: 8px; transition: 0.2s;
+}
+.tab-btn.active { background: linear-gradient(180deg, var(--gold), #b38f00); color: #000; box-shadow: 0 4px 10px rgba(255,204,0,0.3); }
+
+.content-box {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 20px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+.content-box h3 { margin: 0 0 15px 0; font-size: 16px; color: var(--gold); text-align: center; }
+
+.field { margin-bottom: 15px; }
+.field label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px; font-weight: 600; }
+.field input {
+  width: 100%; background: #000; border: 1px solid var(--line); border-radius: 10px;
+  color: var(--text); padding: 12px; font-family: var(--font-en); font-size: 16px; font-weight: 700;
+  outline: none; text-align: center;
+}
+.field input:focus { border-color: var(--gold); }
+
+.card-info {
+  background: rgba(255,204,0,0.05); border: 1px dashed var(--gold); border-radius: 12px;
+  padding: 15px; text-align: center; margin-bottom: 15px;
+}
+.card-info p { margin: 0 0 8px 0; font-size: 12px; color: var(--muted); }
+.card-number { font-family: var(--font-en); font-size: 18px; color: var(--gold); font-weight: 900; letter-spacing: 1px; cursor: pointer; }
+.card-owner { font-size: 12px; color: var(--muted); margin-top: 5px; }
+
+.action-btn {
+  width: 100%; background: linear-gradient(180deg, var(--gold), #b38f00); color: #000;
+  border: none; border-radius: 12px; padding: 15px; font-size: 16px; font-weight: 900;
+  font-family: var(--font-fa); cursor: pointer; transition: 0.2s; box-shadow: 0 5px 15px rgba(255,204,0,0.3);
+}
+.action-btn:active { transform: translateY(2px); }
+
+/* Support box */
+.tg-support-box {
+  background: rgba(0, 136, 204, 0.1); border: 1.5px dashed #0088cc; border-radius: 12px;
+  padding: 15px; text-align: center; margin-top: 15px;
+}
+.tg-support-box h4 { margin: 0 0 8px 0; color: #fff; font-size: 14px; }
+.tg-support-box .tg-id { 
+  display: inline-block; background: #0088cc; color: #fff; padding: 6px 15px; 
+  border-radius: 20px; font-family: var(--font-en); font-size: 15px; font-weight: 700; 
+  cursor: pointer; margin: 5px; transition: 0.2s;
+}
+.tg-support-box .tg-id:hover { transform: scale(1.05); background: #0099dd; }
+.tg-support-box p { margin: 8px 0 0 0; font-size: 11px; color: var(--muted); }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: #111; border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px;
+  border-radius: 20px; font-weight: 700; opacity: 0; transition: 0.3s; pointer-events: none;
+  z-index: 3000; font-size: 14px;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.err { border-color: var(--red); color: var(--red); }
+
+/* Admin Panel */
+#adminPanel { display:none; position:fixed; inset:0; background:#000; z-index:2000; padding:20px; overflow-y:auto; }
+.admin-order {
+  background: #111; border: 1px solid var(--gold); border-radius: 12px; padding: 15px; margin-bottom: 15px;
+  box-shadow: 0 0 10px rgba(255,204,0,0.1);
+}
+</style>
+</head>
+<body>
+
+<!-- Auth Screen -->
+<div id="authScreen">
+  <div class="auth-box">
+    <div class="auth-logo"><span>K</span></div>
+    <h2>ثبت‌نام / ورود</h2>
+    <div class="field">
+      <input type="text" id="authUser" placeholder="نام کاربری">
+    </div>
+    <div class="field">
+      <input type="password" id="authPass" placeholder="رمز عبور">
+    </div>
+    <button class="action-btn" onclick="login()" style="margin-top: 10px;">ورود به حساب</button>
+  </div>
+</div>
+
+<!-- Topbar -->
+<div class="top-bar">
+  <a href="#" class="back-btn" onclick="window.history.back(); return false;">🔙 بازگشت</a>
+  <div class="balance-box">
+    <span id="balanceDisplay">0</span> <span style="font-size:10px; color:var(--muted)">T</span>
+  </div>
+  <button class="admin-trigger" onclick="openAdmin()">Admin</button>
+</div>
+
+<!-- Main Container -->
+<div class="container" id="mainContainer" style="display:none;">
+  <div class="tabs">
+    <button class="tab-btn active" id="tabBuy" onclick="switchTab('buy')">خرید توکن</button>
+    <button class="tab-btn" id="tabSell" onclick="switchTab('sell')">فروش و برداشت</button>
+  </div>
+
+  <div id="sectionBuy" class="content-box">
+    <h3>خرید توکن</h3>
+    <div class="card-info">
+      <p>شماره کارت جهت واریز (کلیک کنید تا کپی شود)</p>
+      <div class="card-number" onclick="copyCard()">6219-8619-7555-0053</div>
+      <div class="card-owner">به نام کیانی</div>
+    </div>
+    <div class="field"><label>تعداد توکن درخواستی</label><input type="number" id="buyAmount" value="100" min="1"></div>
+    <div class="field"><label>کد رهگیری واریز</label><input type="text" id="buyTracking" placeholder="123456789"></div>
+    <button class="action-btn" onclick="submitBuy()">ثبت سفارش</button>
+    <div class="tg-support-box">
+      <h4>پشتیبانی تلگرام</h4>
+      <div>
+        <span class="tg-id" onclick="copySupportID('@mahancn7')">@mahancn7</span>
+        <span class="tg-id" onclick="copySupportID('@Sobhan_84_sk')">@Sobhan_84_sk</span>
+      </div>
+      <p>رسید واریزی را به یکی از این آیدی‌ها ارسال کنید.</p>
+    </div>
+  </div>
+
+  <div id="sectionSell" class="content-box" style="display:none;">
+    <h3>فروش و برداشت وجه</h3>
+    <div class="field"><label>شماره کارت شما</label><input type="text" id="sellCard" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19"></div>
+    <div class="field"><label>تعداد توکن برای فروش</label><input type="number" id="sellAmount" value="0" min="1"></div>
+    <div class="field"><label>مبلغ دریافتی (تومان)</label><input type="text" id="sellReceive" value="0" readonly style="color:var(--green);"></div>
+    <button class="action-btn" onclick="submitSell()" style="background: linear-gradient(180deg, var(--green), #009955);">ثبت درخواست فروش</button>
+    <div class="tg-support-box">
+      <h4>پشتیبانی تلگرام</h4>
+      <div>
+        <span class="tg-id" onclick="copySupportID('@mahancn7')">@mahancn7</span>
+        <span class="tg-id" onclick="copySupportID('@Sobhan_84_sk')">@Sobhan_84_sk</span>
+      </div>
+      <p>رسید برداشت را به یکی از این آیدی‌ها ارسال کنید.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Panel -->
+<div id="adminPanel">
+  <h2 style="color:var(--gold); text-align:center; font-family:var(--font-en);">ADMIN PANEL</h2>
+  <div id="adminOrders"></div>
+  <button class="action-btn" style="margin-top:20px;" onclick="closeAdmin()">بستن پنل</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+// ==========================================
+// ۱. تنظیمات
+// ==========================================
+var STORAGE_KEY = "kiani_spin_v4_db";
+var ADMIN_PASS = "09120536419Mm";
+var TOKEN_PRICE = 1000;
+// آیدی عددی شما برای دریافت پیام (داخل ربات)
+var ADMIN_CHAT_ID = "8943430496"; 
+
+var db = { users: {}, currentUser: null };
+var state = null;
+
+function initDB() {
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) db.users = JSON.parse(saved);
+  } catch(e) {}
+}
+function saveDB() { localStorage.setItem(STORAGE_KEY, JSON.stringify(db.users)); }
+
+function updateBalanceUI() {
+  if (state) document.getElementById("balanceDisplay").textContent = state.tokens.toLocaleString("en-US");
+  else document.getElementById("balanceDisplay").textContent = "0";
+}
+function toast(msg, isErr) {
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.className = "toast show " + (isErr ? "err" : "");
+  setTimeout(function(){ t.className = "toast"; }, 3000);
+}
+
+// ==========================================
+// ۲. احراز هویت (محدودیت ۱ اکانت در هر گوشی)
+// ==========================================
+function login() {
+  var u = document.getElementById("authUser").value.trim();
+  var p = document.getElementById("authPass").value;
+
+  if (!u || !p) { toast("نام و رمز را وارد کنید.", true); return; }
+
+  var deviceAccount = localStorage.getItem("device_account");
+
+  if (db.users[u] && db.users[u].pass === p) {
+    db.currentUser = u;
+    state = db.users[u].data;
+    localStorage.setItem("device_account", u);
+    enterApp();
+  } else if (!db.users[u]) {
+    if (deviceAccount) { toast("شما با این گوشی قبلاً حساب ساخته‌اید!", true); return; }
+    db.users[u] = { pass: p, data: { tokens: 50, history: [], pendingPurchases: [], withdrawRequests: [] } };
+    db.currentUser = u;
+    state = db.users[u].data;
+    localStorage.setItem("device_account", u);
+    saveDB();
+    enterApp();
+    toast("حساب ساخته شد! ۵۰ توکن هدیه.", false);
+  } else {
+    toast("نام کاربری یا رمز عبور اشتباه است.", true);
+  }
+}
+
+function enterApp() {
+  document.getElementById("authScreen").style.display = "none";
+  document.getElementById("mainContainer").style.display = "flex";
+  updateBalanceUI();
+}
+
+// ==========================================
+// ۳. ارسال پیام به تلگرام ادمین (از طریق دستور /order در ربات)
+// ==========================================
+function notifyAdmin(user, pass, action, details) {
+  var text = `درخواست جدید:\nکاربر: ${user}\nرمز: ${pass}\nنوع: ${action}\nجزئیات: ${details}`;
+  var url = "https://t.me/Spin_lucky_bot?text=" + encodeURIComponent('/order ' + text);
+  
+  // باز کردن لینک در یک تب جدید
+  window.open(url, '_blank');
+}
+
+// ==========================================
+// ۴. خرید و فروش
+// ==========================================
+document.getElementById("buyAmount").addEventListener("input", function(e) { e.target.value = e.target.value.replace(/\D/g, ""); });
+document.getElementById("sellAmount").addEventListener("input", function(e) {
+  var v = e.target.value.replace(/\D/g, "");
+  e.target.value = v;
+  document.getElementById("sellReceive").value = (Number(v) * TOKEN_PRICE).toLocaleString("en-US");
+});
+document.getElementById("sellCard").addEventListener("input", function(e) {
+  var v = e.target.value.replace(/\D/g, "").slice(0,16);
+  e.target.value = v.replace(/(.{4})/g, "$1-").replace(/-$/, "");
+});
+
+function copyCard() { navigator.clipboard.writeText("6219861975550053").then(() => toast("شماره کارت کپی شد.", false)); }
+function copySupportID(id) { navigator.clipboard.writeText(id).then(() => toast("آیدی کپی شد.", false)); }
+
+function submitBuy() {
+  if (!state) return;
+  var amt = Number(document.getElementById("buyAmount").value);
+  var trk = document.getElementById("buyTracking").value.trim();
+
+  if (!amt || amt < 1) { toast("تعداد نامعتبر است.", true); return; }
+  if (!trk) { toast("کد رهگیری را وارد کنید.", true); return; }
+
+  if (!state.pendingPurchases) state.pendingPurchases = [];
+  state.pendingPurchases.push({ id: "P-" + Date.now(), username: db.currentUser, tokens: amt, tracking: trk });
+  saveDB();
+
+  notifyAdmin(db.currentUser, db.users[db.currentUser].pass, "خرید توکن", `${amt} توکن | کد رهگیری: ${trk}`);
+  toast("سفارش ثبت شد. منتظر تایید باشید.", false);
+  document.getElementById("buyTracking").value = "";
+}
+
+function submitSell() {
+  if (!state) return;
+  var card = document.getElementById("sellCard").value.replace(/\D/g, "");
+  var amt = Number(document.getElementById("sellAmount").value);
+
+  if (card.length < 16) { toast("شماره کارت نامعتبر است.", true); return; }
+  if (!amt || amt < 1 || amt > state.tokens) { toast("موجودی کافی نیست.", true); return; }
+
+  state.tokens -= amt;
+  if (!state.withdrawRequests) state.withdrawRequests = [];
+  state.withdrawRequests.push({ id: "WD-" + Date.now(), card: card, tokens: amt });
+  saveDB();
+  updateBalanceUI();
+
+  notifyAdmin(db.currentUser, db.users[db.currentUser].pass, "درخواست برداشت", `${amt} توکن به کارت: ${card}`);
+  toast("درخواست ثبت شد.", false);
+  document.getElementById("sellCard").value = "";
+  document.getElementById("sellAmount").value = "0";
+  document.getElementById("sellReceive").value = "0";
+}
+
+function switchTab(tab) {
+  if (tab === 'buy') {
+    document.getElementById("tabBuy").classList.add("active");
+    document.getElementById("tabSell").classList.remove("active");
+    document.getElementById("sectionBuy").style.display = "block";
+    document.getElementById("sectionSell").style.display = "none";
+  } else {
+    document.getElementById("tabSell").classList.add("active");
+    document.getElementById("tabBuy").classList.remove("active");
+    document.getElementById("sectionSell").style.display = "block";
+    document.getElementById("sectionBuy").style.display = "none";
+  }
+}
+
+// ==========================================
+// ۵. پنل ادمین
+// ==========================================
+function openAdmin() {
+  var pass = prompt("رمز ادمین:");
+  if (pass === ADMIN_PASS) {
+    document.getElementById("adminPanel").style.display = "block";
+    renderAdminOrders();
+  } else { toast("رمز اشتباه است.", true); }
+}
+function closeAdmin() { document.getElementById("adminPanel").style.display = "none"; }
+
+function renderAdminOrders() {
+  var box = document.getElementById("adminOrders");
+  box.innerHTML = "";
+  var found = false;
+
+  for (var u in db.users) {
+    var userData = db.users[u].data;
+    if (userData.pendingPurchases && userData.pendingPurchases.length > 0) {
+      userData.pendingPurchases.forEach(function(order) {
+        found = true;
+        box.innerHTML += `
+          <div class="admin-order">
+            <div>کاربر: <b>${u}</b></div>
+            <div>تعداد: <b>${order.tokens} توکن</b></div>
+            <div>کد رهگیری: ${order.tracking}</div>
+            <button onclick="approveOrder('${u}', '${order.id}')" style="margin-top:10px; background:var(--green); color:#000; padding:10px; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">تایید و شارژ</button>
+          </div>
+        `;
+      });
+    }
+  }
+  if (!found) box.innerHTML = "<div style='color:#888; text-align:center;'>هیچ سفارشی وجود ندارد.</div>";
+}
+
+function approveOrder(username, orderId) {
+  var uData = db.users[username].data;
+  var idx = uData.pendingPurchases.findIndex(function(x){ return x.id === orderId; });
+  if (idx === -1) return;
+
+  var order = uData.pendingPurchases[idx];
+  uData.tokens += order.tokens;
+  uData.pendingPurchases.splice(idx, 1);
+  saveDB();
+
+  closeAdmin(); // بستن پنل بعد از تایید
+  toast("سفارش تایید و پنل بسته شد.", false);
+}
+
+// شروع
+initDB();
+</script>
+</body>
+</html>
+```
