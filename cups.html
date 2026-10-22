@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#070312">
+<title>KIANI GAMES - توپ زیر لیوان</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Sobhan';src:url('Sobhan.woff2') format('woff2'),url('Sobhan.ttf') format('truetype');font-display:swap}
+:root{--bg:#070312;--panel:rgba(255,255,255,.05);--line:rgba(255,255,255,.09);--text:#fff;--muted:#8a90a6;
+--blue:#ff2e93;--cyan:#22e4ff;--violet:#7c3aed;--green:#22c55e;--red:#ef4444;--gold:#ffc83d;
+--font:'Sobhan','Vazirmatn',Tahoma,sans-serif}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden;font-variant-numeric:lining-nums}
+.num{direction:ltr;unicode-bidi:isolate;font-feature-settings:"lnum";letter-spacing:.3px}
+svg{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bg i{position:absolute;width:320px;height:320px;border-radius:50%;filter:blur(90px);opacity:.22;animation:drift 18s ease-in-out infinite alternate}
+.bg i:nth-child(1){background:var(--blue);top:-80px;right:-60px}
+.bg i:nth-child(2){background:var(--violet);bottom:10%;left:-100px;animation-duration:23s}
+.bg i:nth-child(3){background:var(--cyan);top:45%;right:-120px;width:240px;height:240px;animation-duration:27s;opacity:.16}
+@keyframes drift{to{transform:translate(40px,-50px) scale(1.2)}}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+@keyframes cupbob{50%{transform:translateY(-7px)}}
+
+#app{position:relative;z-index:1;display:none;flex-direction:column;padding:18px 15px 110px;max-width:500px;margin:0 auto;width:100%}
+.view{display:none}.view.active{display:block;animation:fade .35s ease}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.user{display:flex;align-items:center;gap:11px}
+.avatar{width:42px;height:42px;border-radius:16px;background:linear-gradient(135deg,#ff2e93,#22e4ff);display:grid;place-items:center;font-weight:900;font-size:18px;color:#fff;box-shadow:0 0 22px rgba(255,46,147,.5)}
+.user small{display:block;color:var(--muted);font-size:12px}.user b{font-size:15px}
+.icons{display:flex;gap:8px}
+.icon-btn{width:40px;height:40px;border-radius:13px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:#fff;font-size:18px;display:grid;place-items:center;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+
+.card{background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.015));border:1px solid var(--line);backdrop-filter:blur(14px);border-radius:26px;padding:20px;margin-bottom:14px;box-shadow:0 12px 44px rgba(0,0,0,.4)}
+
+.gtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.gtop h2{margin:0;font-size:18px;font-weight:900}
+.balchip{padding:9px 14px;border-radius:13px;background:rgba(255,200,61,.1);border:1px solid rgba(255,200,61,.35);font-weight:900;font-size:14px;color:#ffd84d}
+.info{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:12px}
+.res{min-height:54px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:17px;text-align:center;border-radius:16px;margin-bottom:14px;background:linear-gradient(90deg,rgba(255,255,255,.03),rgba(124,58,237,.22),rgba(255,255,255,.03));border:1px solid rgba(255,46,147,.25)}
+.res.win{color:var(--green);border-color:rgba(34,197,94,.5);animation:pop .4s}.res.lose{color:var(--red);border-color:rgba(239,68,68,.4)}
+.note{font-size:11.5px;color:var(--muted);line-height:1.9;text-align:center;margin-top:6px}
+.seg{display:flex;gap:6px;background:rgba(0,0,0,.4);padding:4px;border-radius:14px;border:1px solid var(--line)}
+.seg button{flex:1;border:0;background:none;color:#cfd5ea;font:700 13px var(--font);padding:10px 4px;border-radius:11px;cursor:pointer;transition:.2s}
+.seg button.on{background:linear-gradient(135deg,#ff2e93,#7c3aed);color:#fff;box-shadow:0 0 18px rgba(255,46,147,.55)}
+.seg b{display:block;font-size:11px;opacity:.8}
+.chips{display:flex;gap:8px;margin:10px 0 14px;flex-wrap:wrap}
+.chip{flex:1;min-width:60px;padding:9px 0;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:#fff;font-family:var(--font);font-weight:700;font-size:13px;cursor:pointer}
+.chip:active{background:#7c3aed}
+
+/* CUPS GAME */
+.cstage{position:relative;width:min(330px,90vw);height:190px;margin:14px auto 24px}
+.cstage::before{content:"";position:absolute;left:5%;right:5%;top:-10px;bottom:0;background:radial-gradient(ellipse at 50% 0,rgba(255,255,255,.13),transparent 72%);pointer-events:none}
+.cupwrap{position:absolute;top:0;left:0;width:33.333%;height:100%;transition:transform .38s cubic-bezier(.5,0,.3,1)}
+.cball{position:absolute;bottom:22px;left:50%;width:28px;height:28px;margin-left:-14px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#ffd84d 40%,#b45309);box-shadow:0 0 20px rgba(255,200,61,.85);display:none;z-index:1}
+.cupwrap.has .cball{display:block}.cupwrap.has.won .cball{animation:pop .5s ease both}
+.cup{position:absolute;left:8%;right:8%;bottom:14px;height:112px;background:none;border:0;padding:0;z-index:2;cursor:pointer;transition:transform .5s cubic-bezier(.3,1.5,.5,1)}
+.cupwrap.up .cup{transform:translateY(-72px) rotate(-7deg)}
+.cup svg{width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(0 10px 10px rgba(0,0,0,.55))}
+.ctable{position:absolute;left:-4%;right:-4%;bottom:0;height:26px;border-radius:50%;background:radial-gradient(ellipse,rgba(255,46,147,.5),rgba(124,58,237,.18) 60%,transparent 72%)}
+.cb1,.cb2,.cb3{animation:cupbob 1.8s ease-in-out infinite;transform-box:fill-box}.cb2{animation-delay:.3s}.cb3{animation-delay:.6s}
+
+.toast{position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-30px);z-index:4000;opacity:0;padding:12px 20px;border-radius:14px;font-weight:700;font-size:14px;transition:.3s;background:#1a0d3a;border:1px solid #ff2e93;color:#fff;max-width:90%;text-align:center}
+.toast.err{border-color:var(--red)}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="cg" x1="0" x2="1">
+      <stop offset="0" stop-color="#4c1d95"/>
+      <stop offset=".35" stop-color="#ff2e93"/>
+      <stop offset=".55" stop-color="#ff7ab8"/>
+      <stop offset="1" stop-color="#5b21b6"/>
+    </linearGradient>
+    <radialGradient id="cg2">
+      <stop offset="0" stop-color="#ffe3f1"/>
+      <stop offset="1" stop-color="#ff7ab8"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+<div class="bg"><i></i><i></i><i></i></div>
+
+<div id="app">
+  <div class="header">
+    <div class="user"><div class="avatar" id="avatar">K</div><div><small>خوش آمدید</small><b id="helloUser">-</b></div></div>
+    <div class="icons">
+      <a href="buysell.html" class="icon-btn" style="text-decoration:none; font-size:14px;">منو</a>
+    </div>
+  </div>
+
+  <section class="view active" id="view-cups">
+    <div class="gtop">
+      <h2>توپ زیر لیوان</h2>
+      <div class="balchip"><span class="num gbal">0</span> T</div>
+    </div>
+
+    <div class="res" id="c_res">شرط را بگذار و شروع کن</div>
+
+    <div class="cstage" id="c_stage">
+      <div class="cupwrap">
+        <div class="cball"></div>
+        <button class="cup" aria-label="cup">
+          <svg viewBox="0 0 100 120">
+            <path d="M20 14L4 108Q50 122 96 108L80 14Z" fill="url(#cg)"/>
+            <path d="M11 62Q50 74 89 62L87 72Q50 84 13 72Z" fill="#ffd84d"/>
+            <path d="M5 100Q50 114 95 100L96 108Q50 122 4 108Z" fill="#2a0a4a" opacity=".45"/>
+            <ellipse cx="50" cy="14" rx="30" ry="9" fill="url(#cg2)"/>
+            <ellipse cx="50" cy="14" rx="22" ry="5.5" fill="#7c3aed" opacity=".55"/>
+            <path d="M28 24L17 96" stroke="#fff" stroke-opacity=".38" stroke-width="6" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="cupwrap">
+        <div class="cball"></div>
+        <button class="cup" aria-label="cup">
+          <svg viewBox="0 0 100 120">
+            <path d="M20 14L4 108Q50 122 96 108L80 14Z" fill="url(#cg)"/>
+            <path d="M11 62Q50 74 89 62L87 72Q50 84 13 72Z" fill="#ffd84d"/>
+            <path d="M5 100Q50 114 95 100L96 108Q50 122 4 108Z" fill="#2a0a4a" opacity=".45"/>
+            <ellipse cx="50" cy="14" rx="30" ry="9" fill="url(#cg2)"/>
+            <ellipse cx="50" cy="14" rx="22" ry="5.5" fill="#7c3aed" opacity=".55"/>
+            <path d="M28 24L17 96" stroke="#fff" stroke-opacity=".38" stroke-width="6" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="cupwrap">
+        <div class="cball"></div>
+        <button class="cup" aria-label="cup">
+          <svg viewBox="0 0 100 120">
+            <path d="M20 14L4 108Q50 122 96 108L80 14Z" fill="url(#cg)"/>
+            <path d="M11 62Q50 74 89 62L87 72Q50 84 13 72Z" fill="#ffd84d"/>
+            <path d="M5 100Q50 114 95 100L96 108Q50 122 4 108Z" fill="#2a0a4a" opacity=".45"/>
+            <ellipse cx="50" cy="14" rx="30" ry="9" fill="url(#cg2)"/>
+            <ellipse cx="50" cy="14" rx="22" ry="5.5" fill="#7c3aed" opacity=".55"/>
+            <path d="M28 24L17 96" stroke="#fff" stroke-opacity=".38" stroke-width="6" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="ctable"></div>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label>حالت بازی</label>
+        <div class="seg" id="c_mode">
+          <button class="on" data-m="1">1 توپ<b>ضریب 2.5x</b></button>
+          <button data-m="2">2 توپ<b>ضریب 1.25x</b></button>
+        </div>
+      </div>
+      <div id="c_betBox" style="margin-top:12px"></div>
+      <button class="btn gold" id="c_go" style="margin-top:14px; width:100%; border:none; border-radius:16px; padding:15px; font-weight:800; cursor:pointer; background:linear-gradient(135deg,#ffd84d,#ff9f1a); color:#2a1500;">شروع بازی</button>
+      <div class="info">
+        <span>ضریب برد: <b class="num" id="c_x">2.5x</b></span>
+        <span>احتمال برد: <b class="num" id="c_p">33.3%</b></span>
+      </div>
+      <div class="info">
+        <span>بازگشت به بازیکن: <b class="num">83.3%</b></span>
+        <span>حداقل شرط: <b class="num">10</b></span>
+      </div>
+      <div class="note">
+        در حالت 1 توپ شانس 1 از 3 و ضریب 2.5x است. در حالت 2 توپ شانس 2 از 3 و ضریب 1.25x است.
+        جای توپ‌ها قبل از جابجایی با عدد تصادفی امن مشخص می‌شود و بعد از انتخاب تو تغییر نمی‌کند.
+        بازگشت به بازیکن در هر دو حالت 83.3% است.
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+// ==========================================
+// ۱. اتصال به دیتابیس کیف پول
+// ==========================================
+var WALLET_KEY = "kiani_exchange_v5";
+var SESSION_KEY = "kiani_exchange_session";
+var currentUser = null;
+var userData = null;
+
+function loadWallet() {
+  try {
+    var saved = localStorage.getItem(WALLET_KEY);
+    if (!saved) { document.body.innerHTML = "<h2 style='color:white;text-align:center;margin-top:50px;'>ابتدا در منو ثبت‌نام کنید.</h2>"; return; }
+    var db = JSON.parse(saved);
+    currentUser = localStorage.getItem(SESSION_KEY);
+    if (currentUser && db.users[currentUser]) { userData = db.users[currentUser]; }
+    else { document.body.innerHTML = "<h2 style='color:white;text-align:center;margin-top:50px;'>ابتدا در منو ورود کنید.</h2>"; }
+  } catch(e) { console.log(e); }
+}
+
+function saveWallet() {
+  if (currentUser && userData) {
+    var db = JSON.parse(localStorage.getItem(WALLET_KEY));
+    db.users[currentUser] = userData;
+    localStorage.setItem(WALLET_KEY, JSON.stringify(db));
+  }
+}
+
+function updateUI() {
+  if (userData) {
+    var bal = Number(userData.tokens) || 0;
+    document.querySelectorAll(".gbal").forEach(function(e){ e.textContent = Number(bal).toLocaleString("en-US"); });
+  }
+}
+
+var shownBal = 0;
+function renderAll(){
+  $("helloUser").textContent = currentUser;
+  $("avatar").textContent = currentUser.charAt(0).toUpperCase();
+  updateUI();
+}
+
+function $(id){ return document.getElementById(id); }
+function fmt(n){ return Number(n||0).toLocaleString("en-US"); }
+function digitsOnly(s){ return String(s).replace(/[۰-۹]/g,function(d){ return "۰۱۲۳۴۵۶۷۸۹".indexOf(d); }).replace(/\D/g,""); }
+function toast(m,err){ var t=$("toast"); t.textContent=m; t.className="toast show"+(err?" err":""); setTimeout(function(){ t.className="toast"; },2800); }
+
+/* ===== SOUND ENGINE ===== */
+var SFX=(function(){
+  var ctx=null,enabled=true;
+  function ac(){if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(ctx&&ctx.state==="suspended")ctx.resume();return ctx}
+  function tone(freq,dur,type,vol,slideTo){
+    if(!enabled)return;var c=ac();if(!c)return;
+    var o=c.createOscillator(),g=c.createGain();
+    o.type=type||"sine";o.frequency.setValueAtTime(freq,c.currentTime);
+    if(slideTo)o.frequency.exponentialRampToValueAtTime(slideTo,c.currentTime+dur);
+    g.gain.setValueAtTime(0,c.currentTime);
+    g.gain.linearRampToValueAtTime(vol||.18,c.currentTime+.01);
+    g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+dur);
+    o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+dur+.02);
+  }
+  return {
+    click:function(){tone(600,.08,"square",.08)},
+    bet:function(){tone(440,.09,"triangle",.1,660)},
+    win:function(){[523,659,784,1046].forEach(function(f,i){setTimeout(function(){tone(f,.18,"triangle",.16)},i*80)})},
+    lose:function(){tone(300,.3,"sawtooth",.12,140)},
+    tick:function(){tone(1200,.04,"square",.05)},
+    reveal:function(){tone(700,.15,"triangle",.12,1200)}
+  };
+})();
+document.addEventListener("touchstart",function once(){try{var c=new (window.AudioContext||window.webkitAudioContext)();c.resume()}catch(e){}document.removeEventListener("touchstart",once)},{once:true});
+document.addEventListener("click",function once(){try{var c=new (window.AudioContext||window.webkitAudioContext)();c.resume()}catch(e){}document.removeEventListener("click",once)},{once:true});
+
+/* ===== GAME HELPERS ===== */
+var G={MIN:10};
+G.$=function(i){return document.getElementById(i)};
+G.rnd=function(n){var a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]%n};
+G.betVal=function(p){return parseInt(digitsOnly(G.$(p+"bet").value),10)||0};
+G.take=function(p){
+  var b=G.betVal(p);
+  if(b<G.MIN){toast("حداقل شرط "+G.MIN+" توکن است",true);return 0}
+  if(b>userData.tokens){toast("موجودی کافی نیست",true);return 0}
+  userData.tokens-=b; saveWallet(); renderAll(); SFX.bet(); return b;
+};
+G.pay=function(x){x=Math.floor(x);if(x>0){userData.tokens+=x;saveWallet();renderAll()}return x};
+G.result=function(p,t,win){var r=G.$(p+"res");r.textContent=t;r.className="res "+(win?"win":"lose")};
+G.seg=function(id,cb,can){G.$(id).addEventListener("click",function(e){var b=e.target.closest("button");if(!b||(can&&!can()))return;[].forEach.call(this.children,function(c){c.classList.remove("on")});b.classList.add("on");SFX.click();cb(b.dataset)})};
+G.mount=function(id,p){
+ G.$(id).innerHTML='<div class="field" style="margin-bottom:0"><label>مبلغ شرط (توکن) - حداقل '+G.MIN+'</label><input id="'+p+'bet" inputmode="numeric" value="10" style="width:100%;background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:16px;color:#fff;padding:15px;outline:none;text-align:center;transition:.2s;font-family:var(--font);font-size:15px"></div><div class="chips" style="margin-top:10px"><button class="chip" data-b="10">10</button><button class="chip" data-b="50">50</button><button class="chip" data-b="h">نصف</button><button class="chip" data-b="d">دو برابر</button><button class="chip" data-b="m">همه</button></div>';
+ G.$(id).addEventListener("click",function(e){var c=e.target.closest("[data-b]");if(!c)return;var v=c.dataset.b,cur=G.betVal(p);
+  var n=v==="h"?Math.floor(cur/2):v==="d"?cur*2:v==="m"?userData.tokens:Number(v);G.$(p+"bet").value=Math.max(0,n);SFX.click()})};
+
+/* ===== CUPS GAME ===== */
+(function(){
+var W=[].slice.call(document.querySelectorAll("#c_stage .cupwrap")),slot=[0,1,2],balls=[],gs="idle",bet=0,mode=1;
+function mult(){return mode===1?2.5:1.25}
+function place(){W.forEach(function(w,i){w.style.transform="translateX("+slot[i]*100+"%)"})}
+function lift(i,on){W[i].classList.toggle("up",on)}
+function wait(ms){return new Promise(function(r){setTimeout(r,ms)})}
+
+async function start(){
+ if(gs!=="idle" || !userData)return;
+ var b=G.take("c_");if(!b)return;
+ bet=b;gs="busy";G.$("c_go").disabled=true;
+ var rs=G.$("c_res");rs.className="res";
+ W.forEach(function(w,i){w.classList.remove("has","won");lift(i,false)});slot=[0,1,2];place();
+ balls=[];while(balls.length<mode){var r=G.rnd(3);if(balls.indexOf(r)<0)balls.push(r)}
+ balls.forEach(function(i){W[i].classList.add("has")});
+ rs.textContent=mode===1?"تماشا کن، توپ اینجاست":"تماشا کن، دو توپ اینجاست";
+ SFX.reveal();
+ await wait(350);balls.forEach(function(i){lift(i,true)});
+ await wait(1100);balls.forEach(function(i){lift(i,false)});
+ await wait(500);
+ rs.textContent="در حال جابجایی...";
+ for(var n=0;n<9;n++){
+   var a=G.rnd(3),c=(a+1+G.rnd(2))%3,ia=slot.indexOf(a),ic=slot.indexOf(c);
+   slot[ia]=c;slot[ic]=a;place();SFX.tick();await wait(430);
+ }
+ rs.textContent="یک لیوان را انتخاب کن";gs="pick";
+}
+
+async function pick(i){
+ if(gs!=="pick")return;
+ gs="busy";
+ var win=balls.indexOf(i)>-1,p=win?G.pay(bet*mult()):0;
+ lift(i,true);await wait(550);
+ W.forEach(function(w,k){lift(k,true)});
+ 
+ // ثبت در تاریخچه کیف پول
+ if (!userData.history) userData.history = [];
+ userData.history.push({
+    game: "cups",
+    mult: win ? mult() : 0,
+    bet: bet,
+    win: p,
+    net: p - bet,
+    ts: Date.now()
+ });
+ if(userData.history.length > 50) userData.history = userData.history.slice(-50);
+ saveWallet();
+
+ if(win){
+   SFX.win();W[i].classList.add("won");
+   G.result("c_","درست حدس زدی!  |  +"+fmt(p-bet)+" توکن",true);
+   try{navigator.vibrate&&navigator.vibrate([30,40,30])}catch(e){}
+ } else {
+   SFX.lose();
+   G.result("c_","اشتباه بود  |  -"+fmt(bet)+" توکن",false);
+ }
+ await wait(900);gs="idle";G.$("c_go").disabled=false;
+}
+G.mount("c_betBox","c_");place();
+G.seg("c_mode",function(d){
+  mode=+d.m;
+  G.$("c_x").textContent=mult()+"x";
+  G.$("c_p").textContent=(mode===1?"33.3":"66.7")+"%";
+},function(){return gs==="idle"});
+G.$("c_go").onclick=start;
+G.$("c_stage").addEventListener("click",function(e){
+  var w=e.target.closest(".cupwrap");
+  if(w)pick(W.indexOf(w));
+});
+})();
+
+loadWallet();
+if (userData) {
+  $("app").style.display = "flex";
+  renderAll();
+}
+</script>
+</body>
+</html>
