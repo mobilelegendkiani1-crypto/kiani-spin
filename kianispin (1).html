@@ -1,0 +1,829 @@
+
+
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#030610">
+<title>KIANI EXCHANGE</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Lalezar&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #030610; --panel: rgba(12, 22, 42, 0.72); --line: rgba(0, 170, 255, 0.18);
+  --text: #eaf4ff; --muted: #7f95b5; --blue: #00aaff; --cyan: #00e5ff; --green: #19e6a0; --red: #ff4d6d; --amber: #ffc83d;
+  --font-fa: 'Cairo', Tahoma, sans-serif; --font-title: 'Lalezar', 'Cairo', sans-serif; --font-en: 'Orbitron', sans-serif;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-fa); margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; }
+body::before { content: ""; position: fixed; inset: 0; z-index: -2; background: radial-gradient(600px 400px at 85% -5%, rgba(0,102,255,0.35), transparent 60%), radial-gradient(500px 400px at 5% 30%, rgba(0,229,255,0.12), transparent 60%), #030610; }
+body::after { content: ""; position: fixed; inset: 0; z-index: -1; opacity: .25; background-image: linear-gradient(rgba(0,170,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,170,255,.06) 1px, transparent 1px); background-size: 38px 38px; mask-image: radial-gradient(ellipse at 50% 20%, #000 20%, transparent 75%); }
+.num { font-family: var(--font-en); letter-spacing: .5px; direction: ltr; unicode-bidi: isolate; }
+h1, h3, .btn, .quick button, .chip, .nav-btn, .badge, .admin-order .type, .stat .k, .balance-card .lbl { font-family: var(--font-title); font-weight: 400; letter-spacing: 0; }
+
+/* Auth & App */
+#authScreen { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(3,6,16,.6); backdrop-filter: blur(6px); }
+.auth-box { width: 100%; max-width: 400px; padding: 38px 28px 30px; text-align: center; background: linear-gradient(160deg, rgba(10,24,48,.95), rgba(4,8,18,.97)); border: 1px solid var(--blue); border-radius: 28px; box-shadow: 0 30px 80px rgba(0,0,0,.8); animation: rise .6s; }
+@keyframes rise { from { opacity: 0; transform: translateY(40px) scale(.96); } to { opacity: 1; transform: none; } }
+.logo-ring { width: 84px; height: 84px; margin: 0 auto 18px; border-radius: 50%; position: relative; display: grid; place-items: center; background: conic-gradient(from 0deg, var(--blue), var(--cyan), #fff, var(--blue)); animation: spin 7s linear infinite; box-shadow: 0 0 36px var(--glow); }
+.logo-ring::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: #050b18; }
+.logo-ring span { position: relative; z-index: 2; font-size: 36px; animation: spin-rev 7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } } @keyframes spin-rev { to { transform: rotate(-360deg); } }
+.auth-box h1 { margin: 0 0 4px; font-family: var(--font-en); font-size: 22px; letter-spacing: 4px; color: #fff; }
+.field { margin-bottom: 14px; text-align: right; }
+.field label { display: block; font-size: 12.5px; color: var(--muted); margin-bottom: 7px; font-weight: 700; }
+.field input { width: 100%; background: rgba(0,0,0,.55); border: 1px solid var(--line); border-radius: 14px; color: #fff; padding: 14px; outline: none; text-align: center; transition: .2s; }
+.field input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,170,255,.15); }
+.btn { width: 100%; border: none; border-radius: 14px; padding: 15px; font-size: 18px; font-weight: 900; color: #fff; cursor: pointer; transition: .2s; background: linear-gradient(135deg, var(--blue), var(--blue-2)); box-shadow: 0 8px 26px rgba(0,102,255,.45); }
+.btn:active { transform: translateY(2px) scale(.99); }
+.btn.ghost { background: transparent; border: 1px solid var(--line-strong); box-shadow: none; color: var(--blue); }
+.btn.danger { background: linear-gradient(135deg, #ff4d6d, #c1163a); }
+
+#app { display: none; max-width: 520px; margin: 0 auto; padding: 0 14px 110px; }
+.top-bar { position: sticky; top: 0; z-index: 20; margin: 0 -14px 14px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; background: rgba(3,6,16,.78); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand .dot { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; background: linear-gradient(135deg, var(--blue), var(--blue-2)); font-family: var(--font-en); font-weight: 900; }
+.brand b { font-family: var(--font-en); letter-spacing: 2px; font-size: 14px; }
+.view { display: none; animation: fade .35s ease; }
+.view.active { display: block; }
+@keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 22px; padding: 18px; margin-bottom: 14px; box-shadow: 0 10px 40px rgba(0,0,0,.4); }
+.card h3 { margin: 0 0 14px; font-size: 15px; font-weight: 900; display: flex; align-items: center; gap: 8px; }
+.card h3::before { content: ""; width: 4px; height: 16px; border-radius: 3px; background: linear-gradient(var(--cyan), var(--blue-2)); }
+
+.balance-card { position: relative; overflow: hidden; padding: 22px; border-radius: 26px; margin-bottom: 14px; background: linear-gradient(135deg, #0a3a9a 0%, #0066ff 45%, #00aaff 100%); box-shadow: 0 20px 50px rgba(0,102,255,.45); }
+.balance-card .lbl { font-size: 13px; opacity: .85; display: flex; justify-content: space-between; align-items: center; }
+.balance-card .amount { font-family: var(--font-en); font-size: 42px; font-weight: 900; margin: 8px 0 2px; direction: ltr; text-align: right; }
+.balance-card .amount small { font-size: 15px; opacity: .8; margin-right: 6px; }
+.balance-card .toman { font-size: 13px; opacity: .9; }
+.balance-card .user-chip { background: rgba(0,0,0,.28); padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+
+.menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 14px; }
+.menu-btn { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 20px 10px; text-align: center; cursor: pointer; color: #fff; font-weight: bold; font-size: 14px; text-decoration: none; display: block; }
+.menu-btn .icon { font-size: 32px; display: block; margin-bottom: 10px; }
+
+.pay-card { position: relative; border-radius: 18px; padding: 18px; margin-bottom: 16px; overflow: hidden; cursor: pointer; background: linear-gradient(135deg, #07142e, #0a2a66); border: 1px solid var(--line-strong); text-align: center; }
+.pay-card .cn { font-family: var(--font-en); font-size: 20px; font-weight: 700; letter-spacing: 1.5px; direction: ltr; }
+.summary { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: 14px; margin-bottom: 14px; background: rgba(0,170,255,.08); border: 1px dashed var(--line-strong); }
+
+.overlay { position: fixed; inset: 0; z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(0,4,12,.82); backdrop-filter: blur(10px); }
+.overlay.show { display: flex; animation: fade .25s ease; }
+.modal { width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; padding: 28px 24px; text-align: center; background: linear-gradient(160deg, #0a1a36, #050b18); border: 1px solid var(--line-strong); border-radius: 26px; }
+.modal h3 { margin: 0 0 12px; font-size: 19px; color: var(--cyan); }
+.modal p { color: #c7d8f2; font-size: 13.5px; line-height: 2; margin: 0 0 10px; }
+.modal .kv { display: flex; justify-content: space-between; padding: 10px 14px; border-radius: 12px; background: rgba(0,170,255,.07); margin-bottom: 8px; font-size: 13px; }
+.tg-btn { display: inline-block; padding: 10px 22px; border-radius: 12px; cursor: pointer; margin-bottom: 16px; font-family: var(--font-en); font-weight: 900; font-size: 15px; color: #fff; background: linear-gradient(135deg, #2aabee, #1b7fd0); }
+
+/* Admin */
+#adminPanel { position: fixed; inset: 0; z-index: 3000; display: none; overflow-y: auto; padding: 20px; background: #02050d; }
+.admin-head { text-align: center; letter-spacing: 3px; color: var(--cyan); margin: 6px 0 18px; }
+.admin-order { background: var(--panel-solid); border: 1px solid var(--line-strong); border-radius: 18px; padding: 16px; margin-bottom: 14px; }
+.admin-order.sell { border-color: rgba(255,77,109,.45); }
+.admin-order .line { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px dashed rgba(255,255,255,.06); }
+.acts { display: flex; gap: 10px; margin-top: 14px; }
+.acts .btn { padding: 10px; font-size: 14px; }
+
+.toast { position: fixed; top: 18px; left: 50%; transform: translateX(-50%) translateY(-30px); z-index: 4000; opacity: 0; padding: 12px 22px; border-radius: 16px; font-weight: 700; font-size: 14px; transition: .35s; background: rgba(8,18,38,.96); border: 1px solid var(--blue); color: #fff; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- Auth Screen -->
+<div id="authScreen">
+  <div class="auth-box">
+    <div class="logo-ring"><span>👑</span></div>
+    <h1>KIANI EXCHANGE</h1>
+    <p class="sub" style="color:var(--muted);margin-bottom:20px;">ورود یا ساخت حساب جدید</p>
+    <div class="field"><input type="text" id="authUser" placeholder="نام کاربری" maxlength="24"></div>
+    <div class="field"><input type="password" id="authPass" placeholder="رمز عبور (حداقل ۶ کاراکتر)"></div>
+    <button class="btn" id="btnLogin" style="margin-top:6px">ورود به حساب</button>
+    <button class="btn ghost" id="btnRegister" style="margin-top:10px">ساخت حساب جدید (۵۰ توکن هدیه)</button>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app">
+  <div class="top-bar">
+    <div class="brand">
+      <div class="dot">K</div>
+      <div><b>KIANI</b><small id="helloUser" style="color:var(--muted)">—</small></div>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn faint" id="btnAdmin" title="Admin">⚙</button>
+      <button class="icon-btn" id="btnLogout" title="خروج">⏻</button>
+    </div>
+  </div>
+
+  <!-- Home / Menu -->
+  <section class="view active" id="view-home">
+    <div class="balance-card">
+      <div class="lbl"><span>موجودی شما</span><span class="user-chip" id="chipUser">—</span></div>
+      <div class="amount"><span id="balAmount">0</span><small>T</small></div>
+      <div class="toman">≈ <span class="num" id="balToman">0</span> تومان</div>
+    </div>
+    <h3 style="font-size:18px; margin-bottom:12px; text-align:center;">بازی‌ها و خدمات</h3>
+    <div class="menu-grid">
+      <a href="KianiSpin (1).html" class="menu-btn"><span class="icon">🎡</span>گردونه شانس</a>
+      <a href="mines.html" class="menu-btn"><span class="icon">💣</span>بازی انفجار</a>
+      <a href="plinko.html" class="menu-btn"><span class="icon">🟢</span>بازی پلینکو</a>
+      <div class="menu-btn" data-go="buy"><span class="icon">💳</span>خرید توکن</div>
+      <div class="menu-btn" data-go="sell"><span class="icon">🏦</span>فروش توکن</div>
+    </div>
+  </section>
+
+  <!-- Buy -->
+  <section class="view" id="view-buy">
+    <div class="card">
+      <h3>خرید توکن</h3>
+      <div class="pay-card" id="payCard">
+        <p style="margin:0 0 10px;color:var(--muted);font-size:12px">برای کپی بزنید</p>
+        <div class="cn">6219-8619-7555-0053</div>
+        <div style="margin-top:10px;color:#b6c9e8">به نام کیانی</div>
+      </div>
+      <div class="field"><label>تعداد توکن</label><input type="text" inputmode="numeric" id="buyAmount" value="100" maxlength="7"></div>
+      <div class="summary"><span class="k" style="color:var(--muted)">مبلغ</span><span class="v num" id="buyPrice">100,000 تومان</span></div>
+      <div class="field"><label>کد رهگیری واریز</label><input type="text" id="buyTracking" placeholder="123456789" maxlength="32"></div>
+      <button class="btn" id="btnBuy">ثبت سفارش خرید</button>
+    </div>
+  </section>
+
+  <!-- Sell -->
+  <section class="view" id="view-sell">
+    <div class="card">
+      <h3>فروش توکن</h3>
+      <div class="field"><label>شماره کارت شما</label><input type="text" inputmode="numeric" id="sellCard" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19"></div>
+      <div class="field"><label>تعداد توکن (موجودی: <span class="num" id="sellBal">0</span>)</label><input type="text" inputmode="numeric" id="sellAmount" placeholder="0"></div>
+      <div class="summary"><span class="k" style="color:var(--muted)">دریافتی</span><span class="v num" id="sellReceive">0 تومان</span></div>
+      <button class="btn danger" id="btnSell">ثبت درخواست فروش</button>
+    </div>
+  </section>
+</div>
+
+<!-- Modals -->
+<div class="overlay" id="msgOverlay"><div class="modal" id="msgModal"></div></div>
+<div class="overlay" id="adminLoginOverlay">
+  <div class="modal">
+    <h3>ورود ادمین</h3>
+    <div class="field"><input type="password" id="adminPassInput" placeholder="رمز ادمین"></div>
+    <button class="btn" id="adminLoginOk">ورود</button>
+  </div>
+</div>
+<div id="adminPanel">
+  <div class="inner" style="max-width:520px;margin:0 auto;">
+    <h2 class="admin-head">ADMIN PANEL</h2>
+    <div id="adminOrders"></div>
+    <button class="btn ghost" style="margin-top:14px" id="adminClose">بستن پنل</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+var STORAGE_KEY = "kiani_exchange_v5";
+var SESSION_KEY = "kiani_exchange_session";
+var DEVICE_KEY = "kiani_exchange_device";
+var ADMIN_HASH = "91a6dba7d8f88cd70d4a1c5db0098d76f2a99257bc9d8524494bb1cd32b0fbd6"; // 09120536419Mm
+var TOKEN_PRICE = 1000;
+var CARD_NUMBER = "6219861975550053";
+var BUY_ADMIN_ID = "@mahancn3";
+var SELL_ADMIN_ID = "@sobhan_1384_k";
+var WELCOME_TOKENS = 50;
+
+var db = { users: {} };
+var currentUser = null;
+
+function $(id) { return document.getElementById(id); }
+function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+function fmt(n) { return Number(n || 0).toLocaleString("en-US"); }
+function digitsOnly(s) { return String(s).replace(/[۰-۹]/g, function (d) { return "۰۱۲۳۴۵۶۷۸۹".indexOf(d); }).replace(/\D/g, ""); }
+function makeId(prefix) { return prefix + "-" + Date.now().toString(36).toUpperCase().slice(-5) + Math.random().toString(36).slice(2, 5).toUpperCase(); }
+function toast(msg, isErr) { var t = $("toast"); t.textContent = msg; t.className = "toast show" + (isErr ? " err" : ""); setTimeout(function () { t.className = "toast"; }, 2800); }
+
+async function sha256(text) {
+  if (window.crypto && crypto.subtle) {
+    var buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+    return Array.prototype.map.call(new Uint8Array(buf), function (x) { return x.toString(16).padStart(2, "0"); }).join("");
+  }
+  return "plain:" + text;
+}
+
+function loadDB() { try { var s = localStorage.getItem(STORAGE_KEY); if (s) db = JSON.parse(s); } catch (e) {} if (!db.users) db.users = {}; }
+function saveDB() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); } catch (e) {} }
+function me() { return currentUser ? db.users[currentUser] : null; }
+
+async function doLogin() {
+  var u = $("authUser").value.trim().toLowerCase();
+  var p = $("authPass").value;
+  if (!u || !p) return toast("نام و رمز را وارد کنید.", true);
+  var rec = db.users[u];
+  if (!rec) return toast("حسابی با این نام پیدا نشد.", true);
+  var h = await sha256(rec.salt + p);
+  if (h !== rec.hash) return toast("رمز عبور اشتباه است.", true);
+  startSession(u);
+}
+
+async function doRegister() {
+  var u = $("authUser").value.trim().toLowerCase();
+  var p = $("authPass").value;
+  if (!/^[a-z0-9_]{3,24}$/.test(u)) return toast("نام کاربری: ۳ تا ۲۴ حرف انگلیسی، عدد یا _", true);
+  if (p.length < 6) return toast("رمز عبور حداقل ۶ کاراکتر باشد.", true);
+  if (db.users[u]) return toast("این نام کاربری قبلاً گرفته شده.", true);
+  if (localStorage.getItem(DEVICE_KEY)) return toast("با این گوشی قبلاً حساب ساخته‌اید!", true);
+  
+  var salt = Math.random().toString(36).slice(2) + Date.now().toString(36);
+  db.users[u] = { salt: salt, hash: await sha256(salt + p), tokens: WELCOME_TOKENS, history: [] };
+  db.users[u].history.push({ id: makeId("GF"), type: "buy", tokens: WELCOME_TOKENS, amount: 0, status: "approved", ts: Date.now(), note: "هدیه ثبت‌نام" });
+  try { localStorage.setItem(DEVICE_KEY, u); } catch (e) {}
+  saveDB();
+  startSession(u);
+  toast("حساب ساخته شد! " + WELCOME_TOKENS + " توکن هدیه 🎁", false);
+}
+
+function startSession(u) {
+  currentUser = u;
+  try { localStorage.setItem(SESSION_KEY, u); } catch (e) {}
+  $("authScreen").style.display = "none";
+  $("app").style.display = "block";
+  $("authPass").value = "";
+  go("home");
+  renderAll();
+}
+
+function logout() {
+  currentUser = null;
+  try { localStorage.removeItem(SESSION_KEY); } catch (e) {}
+  $("app").style.display = "none";
+  $("authScreen").style.display = "flex";
+}
+
+function go(view) {
+  document.querySelectorAll(".view").forEach(function (v) { v.classList.remove("active"); });
+  $("view-" + view).classList.add("active");
+  if (view === "sell") $("sellBal").textContent = fmt(me() ? me().tokens : 0);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function renderAll() {
+  var u = me(); if (!u) return;
+  $("helloUser").textContent = "سلام " + currentUser;
+  $("chipUser").textContent = "@" + currentUser;
+  $("balAmount").textContent = fmt(u.tokens);
+  $("balToman").textContent = fmt(u.tokens * TOKEN_PRICE);
+  $("sellBal").textContent = fmt(u.tokens);
+}
+
+function showModal(html) { $("msgModal").innerHTML = html; $("msgOverlay").classList.add("show"); }
+function closeModal() { $("msgOverlay").classList.remove("show"); }
+
+function updateBuyPrice() { var v = digitsOnly($("buyAmount").value); $("buyAmount").value = v; $("buyPrice").textContent = fmt(Number(v || 0) * TOKEN_PRICE) + " تومان"; }
+function updateSellPrice() { var v = digitsOnly($("sellAmount").value); $("sellAmount").value = v; $("sellReceive").textContent = fmt(Number(v || 0) * TOKEN_PRICE) + " تومان"; }
+
+function submitBuy() {
+  var u = me(); if (!u) return;
+  var amt = Number(digitsOnly($("buyAmount").value));
+  var trk = $("buyTracking").value.trim();
+  if (!amt || amt < 1) return toast("تعداد نامعتبر است.", true);
+  if (trk.length < 4) return toast("کد رهگیری را وارد کنید.", true);
+
+  var order = { id: makeId("P"), type: "buy", tokens: amt, amount: amt * TOKEN_PRICE, tracking: trk, status: "pending", ts: Date.now() };
+  u.history.push(order);
+  saveDB(); renderAll();
+  $("buyTracking").value = "";
+
+  showModal(
+    '<div class="big-ico">✅</div><h3>سفارش خرید ثبت شد</h3>' +
+    '<div class="kv"><span class="k">تعداد توکن</span><span class="v num">' + fmt(amt) + ' T</span></div>' +
+    '<div class="kv"><span class="k">مبلغ</span><span class="v">' + fmt(order.amount) + ' تومان</span></div>' +
+    '<p>شناسه سفارش شما (برای کپی بزنید):</p>' +
+    '<div class="order-id" data-copy="' + esc(order.id) + '">' + esc(order.id) + '</div>' +
+    '<p style="color:var(--red); font-weight:bold;">لطفاً نام کاربری و رمز خود را به همراه رسید برای ادمین ارسال کنید.</p>' +
+    '<div class="tg-btn" data-copy="' + esc(BUY_ADMIN_ID) + '">' + esc(BUY_ADMIN_ID) + '</div>' +
+    '<button class="btn ghost" data-close="1">متوجه شدم</button>'
+  );
+}
+
+function submitSell() {
+  var u = me(); if (!u) return;
+  var card = digitsOnly($("sellCard").value);
+  var amt = Number(digitsOnly($("sellAmount").value));
+  if (card.length !== 16) return toast("شماره کارت نامعتبر است.", true);
+  if (!amt || amt < 1) return toast("تعداد توکن را وارد کنید.", true);
+  if (amt > u.tokens) return toast("موجودی کافی نیست.", true);
+
+  u.tokens -= amt;
+  var order = { id: makeId("WD"), type: "sell", tokens: amt, amount: amt * TOKEN_PRICE, card: card, status: "pending", ts: Date.now() };
+  u.history.push(order);
+  saveDB(); renderAll();
+  $("sellCard").value = ""; $("sellAmount").value = ""; $("sellReceive").textContent = "0";
+
+  showModal(
+    '<div class="big-ico">⏳</div><h3>درخواست فروش ثبت شد</h3>' +
+    '<div class="kv"><span class="k">تعداد توکن</span><span class="v num">' + fmt(amt) + ' T</span></div>' +
+    '<div class="kv"><span class="k">مبلغ</span><span class="v">' + fmt(order.amount) + ' تومان</span></div>' +
+    '<p>لطفاً <b>شناسه سفارش</b> را برای ادمین بفرستید.</p>' +
+    '<div class="order-id" data-copy="' + esc(order.id) + '">' + esc(order.id) + '</div><br>' +
+    '<div class="tg-btn" data-copy="' + esc(SELL_ADMIN_ID) + '">' + esc(SELL_ADMIN_ID) + '</div>' +
+    '<button class="btn ghost" data-close="1">متوجه شدم</button>'
+  );
+}
+
+function bind() {
+  $("btnLogin").addEventListener("click", doLogin);
+  $("btnRegister").addEventListener("click", doRegister);
+  $("btnLogout").addEventListener("click", logout);
+  $("payCard").addEventListener("click", function () { navigator.clipboard.writeText(CARD_NUMBER).then(function () { toast("کپی شد", false); }); });
+  $("buyAmount").addEventListener("input", updateBuyPrice);
+  $("btnBuy").addEventListener("click", submitBuy);
+  $("sellAmount").addEventListener("input", updateSellPrice);
+  $("btnSell").addEventListener("click", submitSell);
+  document.addEventListener("click", function (e) {
+    var go_ = e.target.closest("[data-go]"); if (go_) return go(go_.dataset.go);
+    var cp = e.target.closest("[data-copy]"); if (cp) return navigator.clipboard.writeText(cp.dataset.copy).then(function () { toast("کپی شد", false); });
+    if (e.target.closest("[data-close]")) return closeModal();
+  });
+  $("msgOverlay").addEventListener("click", function (e) { if (e.target === this) closeModal(); });
+  $("btnAdmin").addEventListener("click", function () { $("adminLoginOverlay").classList.add("show"); });
+  $("adminLoginOk").addEventListener("click", async function () {
+    if (await sha256($("adminPassInput").value) === ADMIN_HASH) {
+      $("adminLoginOverlay").classList.remove("show"); $("adminPanel").style.display = "block"; renderAdmin();
+    } else toast("رمز اشتباه است", true);
+  });
+  $("adminClose").addEventListener("click", function () { $("adminPanel").style.display = "none"; });
+}
+
+function renderAdmin() {
+  var box = $("adminOrders"); box.innerHTML = ""; var pending = [];
+  Object.keys(db.users).forEach(function (name) {
+    db.users[name].history.forEach(function (t) { if (t.status === "pending") pending.push({ user: name, t: t }); });
+  });
+  if (!pending.length) { box.innerHTML = "<div style='color:#888;text-align:center;padding:20px;'>سفارشی نیست</div>"; return; }
+  pending.forEach(function (o) {
+    var t = o.t, isBuy = t.type === "buy";
+    box.innerHTML += '<div class="admin-order ' + (isBuy ? "" : "sell") + '">' +
+      '<div class="line"><span>کاربر</span><b>' + esc(o.user) + '</b></div>' +
+      '<div class="line"><span>نوع</span><b>' + (isBuy ? "خرید" : "فروش") + '</b></div>' +
+      '<div class="line"><span>تعداد</span><b>' + fmt(t.tokens) + ' T</b></div>' +
+      '<div class="line"><span>کد/کارت</span><b>' + esc(isBuy ? t.tracking : t.card) + '</b></div>' +
+      '<div class="acts">' +
+        '<button class="btn green" onclick="resolveOrder(\'' + esc(o.user) + '\',\'' + esc(t.id) + '\',\'approve\')">تایید</button>' +
+        '<button class="btn danger" onclick="resolveOrder(\'' + esc(o.user) + '\',\'' + esc(t.id) + '\',\'reject\')">رد</button>' +
+      '</div></div>';
+  });
+}
+
+function resolveOrder(username, id, action) {
+  var rec = db.users[username], t = rec.history.find(function(x){ return x.id === id; });
+  if (!t) return;
+  t.status = action === "approve" ? "approved" : "rejected";
+  if (action === "approve" && t.type === "buy") rec.tokens += t.tokens;
+  if (action === "reject" && t.type === "sell") rec.tokens += t.tokens;
+  saveDB(); renderAdmin(); renderAll(); toast("انجام شد", false);
+}
+
+loadDB(); bind();
+if (localStorage.getItem(SESSION_KEY) && db.users[localStorage.getItem(SESSION_KEY)]) startSession(localStorage.getItem(SESSION_KEY));
+</script>
+</body>
+</html>
+```
+
+---
+
+۲. کد بازی گردونه (KianiSpin (1).html)
+
+من کد قبلی را با دیتابیس جدید ادغام کردم. دکمه‌های خرید و فروش از این بازی حذف شدند و صفحه ورود آن حذف شد تا از دیتابیس مشترک استفاده کند. تنها راه ورود از buysell.html است.
+
+```html
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>KIANI SPIN</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Vazirmatn:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050505; --panel: #111111; --line: #332b00;
+  --text: #ffffff; --muted: #888888;
+  --gold: #ffcc00; --red: #ff3355; --green: #00ff88; --cyan: #00e5ff;
+  --font-fa: 'Vazirmatn', Tahoma, sans-serif; --font-en: 'Orbitron', sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body { margin:0; padding:0; background: radial-gradient(circle at 50% 0%, #1a1500 0%, #000000 100%); color: var(--text); font-family: var(--font-fa); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+.top-bar { width: 100%; max-width: 600px; display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: rgba(0,0,0,0.8); border-bottom: 1px solid var(--line); border-radius: 0 0 16px 16px; backdrop-filter: blur(10px); }
+.back-btn { color: var(--gold); text-decoration: none; font-weight: 700; font-size: 14px; }
+.balance-box { background: #000; padding: 6px 12px; border-radius: 12px; border: 1px solid var(--gold); font-family: var(--font-en); font-weight: 900; color: var(--gold); font-size: 16px; }
+.container { width: 100%; max-width: 500px; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+
+/* Wheel */
+.wheel-wrap { position: relative; width: 100%; aspect-ratio: 1; margin: 20px 0; }
+.wheel { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--gold); box-shadow: 0 0 30px rgba(255,204,0,0.3); transition: transform 6s cubic-bezier(.17,.67,.16,1); position: relative; }
+.wheel-pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 30px; height: 40px; fill: var(--gold); z-index: 10; filter: drop-shadow(0 0 10px var(--gold)); }
+
+.controls { width: 100%; display: flex; flex-direction: column; gap: 15px; }
+.bet-row { display: flex; gap: 10px; }
+.bet-input { flex: 1; background: #000; border: 1px solid var(--line); border-radius: 10px; color: var(--gold); padding: 10px; text-align: center; font-family: var(--font-en); font-weight: bold; }
+.spin-btn { width: 100%; background: linear-gradient(180deg, #ffcc00, #b38f00); color: #000; border: none; border-radius: 12px; padding: 18px; font-size: 20px; font-weight: 900; cursor: pointer; box-shadow: 0 8px 20px rgba(255,204,0,0.3); transition: 0.2s; }
+.spin-btn:active { transform: scale(0.98); }
+.spin-btn:disabled { opacity: 0.5; filter: grayscale(1); }
+
+.result-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); background: rgba(10,10,10,0.95); padding: 40px; border-radius: 20px; border: 2px solid var(--gold); text-align: center; display: none; z-index: 1000; }
+.result-popup.show { display: block; animation: pop 0.3s forwards; }
+@keyframes pop { to { transform: translate(-50%, -50%) scale(1); } }
+.result-mult { font-family: var(--font-en); font-size: 60px; font-weight: 900; color: var(--gold); margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="buysell.html" class="back-btn">🔙 منو</a>
+  <div class="balance-box"><span id="balanceDisplay">0</span> <span style="font-size:10px;">T</span></div>
+</div>
+
+<div class="container">
+  <div class="wheel-wrap">
+    <svg class="wheel-pointer" viewBox="0 0 40 50"><path d="M20 50L0 15h40z"/></svg>
+    <div id="wheel" class="wheel"></div>
+  </div>
+  <div class="controls">
+    <div class="bet-row">
+      <input type="number" id="betAmount" class="bet-input" value="10" min="1">
+      <button class="spin-btn" id="spinBtn" onclick="spin()">چرخش</button>
+    </div>
+  </div>
+</div>
+
+<div id="resultPopup" class="result-popup">
+  <div class="result-mult" id="resMult">0x</div>
+  <div id="resText" style="color:#fff; font-size:18px; margin-bottom:20px;"></div>
+  <button onclick="closeResult()" style="background:var(--gold); border:none; padding:10px 20px; border-radius:10px; font-weight:bold;">ادامه</button>
+</div>
+
+<script>
+"use strict";
+var STORAGE_KEY = "kiani_exchange_v5";
+var SESSION_KEY = "kiani_exchange_session";
+var TOKEN_PRICE = 1000;
+var currentUser = null;
+var userData = null;
+var isSpinning = false;
+
+// ضرایب و شانس‌های گردونه
+var SEGMENTS = [
+  { mult: 0,   color: "#1a1a1a", label: "0x" },
+  { mult: 0.5, color: "#333",    label: "0.5x" },
+  { mult: 0.8, color: "#555",    label: "0.8x" },
+  { mult: 0,   color: "#1a1a1a", label: "0x" },
+  { mult: 1,   color: "#ffcc00", label: "1x" },
+  { mult: 1.1, color: "#ffcc00", label: "1.1x" },
+  { mult: 1.3, color: "#ff9900", label: "1.3x" },
+  { mult: 0,   color: "#1a1a1a", label: "0x" },
+  { mult: 1.5, color: "#ff9900", label: "1.5x" },
+  { mult: 2,   color: "#ff5500", label: "2x" },
+  { mult: 3,   color: "#ff5500", label: "3x" },
+  { mult: 5,   color: "#ff0000", label: "5x" },
+  { mult: 10,  color: "#ff0000", label: "10x" },
+  { mult: 20,  color: "#ff00cc", label: "20x" },
+  { mult: 50,  color: "#cc00ff", label: "50x" },
+  { mult: 100, color: "#00e5ff", label: "100x" }
+];
+var WEIGHTS = [15, 12, 12, 15, 10, 8, 6, 15, 5, 4, 3, 2, 1, 0.5, 0.2, 0.1];
+var currentRot = 0;
+
+function loadDB() {
+  var s = localStorage.getItem(STORAGE_KEY);
+  if (s) { var db = JSON.parse(s); currentUser = localStorage.getItem(SESSION_KEY); if (currentUser && db.users[currentUser]) userData = db.users[currentUser]; }
+}
+
+function saveDB() {
+  if (currentUser && userData) {
+    var db = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    db.users[currentUser] = userData;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+  }
+}
+
+function updateUI() {
+  if (userData) document.getElementById("balanceDisplay").textContent = userData.tokens.toLocaleString("en-US");
+}
+
+function buildWheel() {
+  var wheel = document.getElementById("wheel");
+  var svgNS = "http://www.w3.org/2000/svg";
+  var svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("viewBox", "0 0 100 100");
+  var n = SEGMENTS.length, ang = 360/n, cx = 50, cy = 50, r = 50;
+
+  for (var i = 0; i < n; i++) {
+    var seg = SEGMENTS[i];
+    var a1 = (i * ang - ang/2) * Math.PI/180 - Math.PI/2;
+    var a2 = (i * ang + ang/2) * Math.PI/180 - Math.PI/2;
+    var x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+    var x2 = cx + r * Math.cos(a2), y2 = cy + r * Math.sin(a2);
+    var path = document.createElementNS(svgNS, "path");
+    path.setAttribute("d", "M " + cx + " " + cy + " L " + x1 + " " + y1 + " A " + r + " " + r + " 0 0 1 " + x2 + " " + y2 + " Z");
+    path.setAttribute("fill", seg.color);
+    path.setAttribute("stroke", "#000");
+    path.setAttribute("stroke-width", "0.5");
+    svg.appendChild(path);
+    
+    var tx = cx + r * 0.7 * Math.cos((i * ang) * Math.PI/180 - Math.PI/2);
+    var ty = cy + r * 0.7 * Math.sin((i * ang) * Math.PI/180 - Math.PI/2);
+    var text = document.createElementNS(svgNS, "text");
+    text.setAttribute("x", tx); text.setAttribute("y", ty);
+    text.setAttribute("text-anchor", "middle"); text.setAttribute("dominant-baseline", "middle");
+    text.setAttribute("fill", "#000"); text.setAttribute("font-weight", "bold"); text.setAttribute("font-size", "4");
+    text.setAttribute("transform", "rotate(" + (i * ang + 90) + " " + tx + " " + ty + ")");
+    text.textContent = seg.label;
+    svg.appendChild(text);
+  }
+  wheel.innerHTML = "";
+  wheel.appendChild(svg);
+}
+
+function spin() {
+  if (isSpinning || !userData) return;
+  var bet = Number(document.getElementById("betAmount").value);
+  if (bet < 1 || bet > userData.tokens) return alert("مبلغ یا موجودی نامعتبر است.");
+
+  isSpinning = true;
+  userData.tokens -= bet;
+  updateUI(); saveDB();
+  document.getElementById("spinBtn").disabled = true;
+
+  var totalW = 0; for (var i=0; i<WEIGHTS.length; i++) totalW += WEIGHTS[i];
+  var rnd = Math.random() * totalW, acc = 0, chosen = 0;
+  for (var j=0; j<WEIGHTS.length; j++) { acc += WEIGHTS[j]; if(rnd < acc) { chosen = j; break; } }
+
+  var seg = SEGMENTS[chosen];
+  var ang = 360 / SEGMENTS.length;
+  var target = 360 - (chosen * ang);
+  var jitter = (Math.random() - 0.5) * (ang * 0.5);
+  var spins = 5 + Math.floor(Math.random() * 3);
+  var current = currentRot % 360;
+  var finalRot = currentRot + spins * 360 + ((target - current + 360) % 360) + jitter;
+
+  currentRot = finalRot;
+  var wheel = document.getElementById("wheel");
+  wheel.style.transform = "rotate(" + finalRot + "deg)";
+
+  setTimeout(function() {
+    var win = Math.floor(bet * seg.mult);
+    userData.tokens += win;
+    saveDB(); updateUI();
+    isSpinning = false;
+    document.getElementById("spinBtn").disabled = false;
+    document.getElementById("resMult").textContent = seg.mult + "x";
+    document.getElementById("resText").innerHTML = seg.mult > 0 ? 'شما <span style="color:var(--green)">'+win+'</span> توکن بردید!' : 'متأسفانه باختید!';
+    document.getElementById("resultPopup").classList.add("show");
+  }, 6000);
+}
+
+function closeResult() { document.getElementById("resultPopup").classList.remove("show"); }
+
+loadDB(); buildWheel(); updateUI();
+if (!userData) {
+  document.body.innerHTML = "<h2 style='color:white;text-align:center;margin-top:50px;'>ابتدا در منوی اصلی ثبت‌نام کنید.</h2>";
+}
+</script>
+</body>
+</html>
+```
+
+---
+
+۳. کد بازی پلینکو (plinko.html)
+
+منطق خواندن دیتابیس تغییر کرد تا از دیتابیس مشترک (kiani_exchange_v5) استفاده کند.
+
+```html
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>KIANI PLINKO</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Vazirmatn:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #050505; --panel: #111; --line: #332b00; --gold: #ffcc00; --red: #ff3355; --green: #00ff88; --white: #fff; --font-en: 'Orbitron'; }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body { margin:0; background: radial-gradient(circle at 50% 0%, #1a0a0a 0%, #000 100%); color: #fff; font-family: 'Vazirmatn', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; user-select: none; }
+.top-bar { width: 100%; max-width: 600px; display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: rgba(0,0,0,0.8); border-bottom: 1px solid var(--line); border-radius: 0 0 16px 16px; }
+.back-btn { color: var(--gold); text-decoration: none; font-weight: 700; font-size: 14px; }
+.balance-box { background: #000; padding: 6px 12px; border-radius: 12px; border: 1px solid var(--gold); font-family: var(--font-en); font-weight: 900; color: var(--gold); font-size: 16px; }
+.container { width: 100%; max-width: 500px; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+.canvas-wrapper { width: 100%; aspect-ratio: 1; border-radius: 20px; background: radial-gradient(circle at 50% 50%, #1a0000 0%, #050505 100%); border: 2px solid var(--line); box-shadow: 0 10px 30px rgba(0,0,0,0.9); overflow: hidden; position: relative; }
+canvas { width: 100%; height: 100%; display: block; }
+.controls-row { width: 100%; margin-top: 15px; display: flex; gap: 10px; align-items: center; }
+.bet-input { flex: 1; background: #000; border: 1px solid var(--line); border-radius: 10px; color: var(--gold); padding: 12px; font-family: var(--font-en); font-size: 16px; font-weight: 700; text-align: center; outline: none; }
+.play-btn { background: linear-gradient(180deg, #ff3355, #990022); border: 2px solid #ff667f; border-radius: 10px; padding: 12px 20px; font-size: 16px; font-weight: 900; color: #fff; cursor: pointer; }
+.play-btn:disabled { opacity: 0.5; filter: grayscale(1); }
+.result-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); background: rgba(10,10,10,0.95); padding: 30px 40px; border-radius: 20px; border: 2px solid var(--line); text-align: center; display: none; z-index: 1000; }
+.result-popup.show { display: block; animation: pop 0.3s forwards; }
+@keyframes pop { to { transform: translate(-50%, -50%) scale(1); } }
+.res-mult { font-family: var(--font-en); font-size: 50px; font-weight: 900; margin-bottom: 5px; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="buysell.html" class="back-btn">🔙 منو</a>
+  <div class="balance-box"><span id="balanceDisplay">0</span> <span style="font-size:10px;">T</span></div>
+</div>
+
+<div class="container">
+  <div class="canvas-wrapper"><canvas id="gameCanvas" width="600" height="600"></canvas></div>
+  <div class="controls-row">
+    <input type="number" id="betAmount" class="bet-input" value="10" min="1">
+    <button class="play-btn" id="playBtn" onclick="dropBall()">پرتاب</button>
+  </div>
+</div>
+
+<div id="resultPopup" class="result-popup">
+  <div class="res-mult" id="resMult">0x</div>
+  <div id="resText" style="font-size:16px; margin-bottom:20px;"></div>
+  <button onclick="document.getElementById('resultPopup').classList.remove('show')" style="background:var(--gold); border:none; padding:10px 20px; border-radius:10px; font-weight:bold; color:#000;">ادامه</button>
+</div>
+
+<script>
+"use strict";
+var STORAGE_KEY = "kiani_exchange_v5";
+var SESSION_KEY = "kiani_exchange_session";
+var TOKEN_PRICE = 1000;
+var currentUser = null;
+var userData = null;
+
+function loadDB() {
+  var s = localStorage.getItem(STORAGE_KEY);
+  if (s) { var db = JSON.parse(s); currentUser = localStorage.getItem(SESSION_KEY); if (currentUser && db.users[currentUser]) userData = db.users[currentUser]; }
+}
+function saveDB() {
+  if (currentUser && userData) {
+    var db = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    db.users[currentUser] = userData;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+  }
+}
+function updateUI() { if (userData) document.getElementById("balanceDisplay").textContent = userData.tokens.toLocaleString("en-US"); }
+
+// Game Setup
+var canvas = document.getElementById("gameCanvas"), ctx = canvas.getContext("2d");
+var W = 600, H = 600, rows = 12, pegR = 5, ballR = 10, gapX = 38, gapY = 40, startY = 70;
+var wallX1 = 60, wallX2 = W - 60;
+var multipliers = [10, 5, 2, 1.5, 1, 0, 0.2, 0, 1.5, 2, 5, 10];
+var colors = ["#ff3355","#ffffff","#ffcc00","#ff3355","#ffcc00","#333","#333","#333","#ffcc00","#ff3355","#ffcc00","#ff3355"];
+var pegs = [], balls = [], bins = [];
+
+function initBoard() {
+  for (var r = 0; r < rows; r++) {
+    var pegsInRow = r + 3, rowStartX = (W - (pegsInRow - 1) * gapX) / 2;
+    for (var c = 0; c < pegsInRow; c++) pegs.push({ x: rowStartX + c * gapX, y: startY + r * gapY, hit: 0 });
+  }
+  var binW = (wallX2 - wallX1) / multipliers.length;
+  for (var i = 0; i < multipliers.length; i++) bins.push({ x: wallX1 + (i * binW), y: H - 40, w: binW, h: 40, mult: multipliers[i], color: colors[i] });
+}
+
+function updatePhysics() {
+  for (var i = balls.length - 1; i >= 0; i--) {
+    var b = balls[i]; b.vy += 0.3; b.x += b.vx; b.y += b.vy; b.vx *= 0.98;
+    if (b.x < wallX1 + ballR) { b.x = wallX1 + ballR; b.vx *= -0.6; }
+    if (b.x > wallX2 - ballR) { b.x = wallX2 - ballR; b.vx *= -0.6; }
+    for (var j = 0; j < pegs.length; j++) {
+      var p = pegs[j], dx = b.x - p.x, dy = b.y - p.y, dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < ballR + pegR) {
+        var nx = dx / dist, ny = dy / dist, overlap = ballR + pegR - dist;
+        b.x += nx * overlap; b.y += ny * overlap;
+        var dot = b.vx * nx + b.vy * ny;
+        b.vx = (b.vx - 2 * dot * nx) * 0.7; b.vy = (b.vy - 2 * dot * ny) * 0.7;
+        p.hit = 1;
+      }
+    }
+    if (b.y > H - 40 - ballR) {
+      for (var k = 0; k < bins.length; k++) {
+        if (b.x >= bins[k].x && b.x < bins[k].x + bins[k].w) { processResult(bins[k].mult, b.bet); break; }
+      }
+      balls.splice(i, 1);
+    }
+  }
+  for (var j = 0; j < pegs.length; j++) if (pegs[j].hit > 0) pegs[j].hit -= 0.05;
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.strokeStyle = "#ffcc00"; ctx.lineWidth = 4; ctx.shadowColor = "#ffcc00"; ctx.shadowBlur = 15;
+  ctx.beginPath(); ctx.moveTo(wallX1, 0); ctx.lineTo(wallX1, H); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(wallX2, 0); ctx.lineTo(wallX2, H); ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  pegs.forEach(function(p) {
+    ctx.beginPath(); ctx.arc(p.x, p.y, pegR, 0, Math.PI * 2);
+    var grad = ctx.createRadialGradient(p.x-2, p.y-2, 1, p.x, p.y, pegR);
+    if (p.hit > 0) { grad.addColorStop(0, "#fff"); grad.addColorStop(1, "#ff3355"); ctx.shadowColor = "#ff3355"; ctx.shadowBlur = 15; }
+    else { grad.addColorStop(0, "#ffcc00"); grad.addColorStop(1, "#664d00"); ctx.shadowBlur = 0; }
+    ctx.fillStyle = grad; ctx.fill();
+  });
+  ctx.shadowBlur = 0;
+
+  bins.forEach(function(bin) {
+    ctx.fillStyle = bin.color; ctx.globalAlpha = 0.15; ctx.fillRect(bin.x, bin.y, bin.w, bin.h);
+    ctx.globalAlpha = 1; ctx.strokeStyle = bin.color; ctx.strokeRect(bin.x, bin.y, bin.w, bin.h);
+    ctx.fillStyle = "#fff"; ctx.font = "bold 10px Orbitron"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(bin.mult + "x", bin.x + bin.w/2, bin.y + bin.h/2);
+  });
+
+  balls.forEach(function(b) {
+    ctx.beginPath(); ctx.arc(b.x, b.y, ballR, 0, Math.PI * 2);
+    var grad = ctx.createRadialGradient(b.x-3, b.y-3, 1, b.x, b.y, ballR);
+    grad.addColorStop(0, "#fff"); grad.addColorStop(0.4, "#ff3355"); grad.addColorStop(1, "#990022");
+    ctx.fillStyle = grad; ctx.shadowColor = "#ff3355"; ctx.shadowBlur = 15; ctx.fill();
+  });
+  ctx.shadowBlur = 0;
+}
+
+function dropBall() {
+  if (!userData) return;
+  var bet = Number(document.getElementById("betAmount").value);
+  if (bet < 1 || bet > userData.tokens) return alert("موجودی یا مبلغ نامعتبر.");
+  userData.tokens -= bet; saveDB(); updateUI();
+  document.getElementById("playBtn").disabled = true;
+  balls.push({ x: W/2 + (Math.random()-0.5)*20, y: 30, vx: (Math.random()-0.5)*3, vy: 0, bet: bet });
+}
+
+function processResult(mult, bet) {
+  var win = Math.floor(bet * mult);
+  userData.tokens += win; saveDB(); updateUI();
+  document.getElementById("playBtn").disabled = false;
+  document.getElementById("resMult").textContent = mult + "x";
+  document.getElementById("resMult").style.color = mult >= 1 ? "var(--gold)" : "var(--red)";
+  document.getElementById("resText").innerHTML = mult > 0 ? "برد: <span style='color:var(--gold)'>"+win+"</span> T" : "باخت";
+  document.getElementById("resultPopup").classList.add("show");
+}
+
+function gameLoop() { updatePhysics(); draw(); requestAnimationFrame(gameLoop); }
+loadDB(); if(userData) { updateUI(); initBoard(); gameLoop(); } else { document.body.innerHTML = "<h2 style='color:white;text-align:center;margin-top:50px;'>ابتدا در منو ثبت‌نام کنید.</h2>"; }
+</script>
+</body>
+</html>
+```
+
+---
+
+۴. کد بازی انفجار (mines.html)
+
+منطق خواندن دیتابیس در این بازی هم تغییر کرد تا از دیتابیس مشترک استفاده کند.
+
+```html
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>KIANI MINES</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Vazirmatn:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #050505; --panel: #111; --line: #332b00; --gold: #ffcc00; --red: #ff3355; --green: #00ff88; --font-en: 'Orbitron'; }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body { margin:0; background: radial-gradient(circle at 50% 0%, #1a1500 0%, #000 100%); color: #fff; font-family: 'Vazirmatn', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; user-select: none; }
+.top-bar { width: 100%; max-width: 600px; display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: rgba(0,0,0,0.8); border-bottom: 1px solid var(--line); border-radius: 0 0 16px 16px; }
+.back-btn { color: var(--gold); text-decoration: none; font-weight: 700; font-size: 14px; }
+.balance-box { background: #000; padding: 6px 12px; border-radius: 12px; border: 1px solid var(--gold); font-family: var(--font-en); font-weight: 900; color: var(--gold); font-size: 16px; }
+.container { width: 100%; max-width: 500px; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+
+.notif-bar { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px; text-align: center; font-weight: 700; font-size: 16px; min-height: 50px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+.notif-bar.gem { border-color: var(--green); color: var(--green); box-shadow: 0 0 15px rgba(0,255,136,0.2); }
+.notif-bar.bomb { border-color: var(--red); color: var(--red); box-shadow: 0 0 15px rgba(255,51,85,0.2); }
+.notif-bar.neutral { color: #888; }
+
+.stats { display: flex; justify-content: space-between; background: var(--panel); padding: 15px; border-radius: 16px; border: 1px solid var(--line); }
+.stat-item { text-align: center; flex: 1; }
+.stat-label { font-size: 12px; color: #888; margin-bottom: 5px; }
+.stat-value { font-family: var(--font-en); font-size: 18px; font-weight: 900; color: var(--gold); }
+
+.grid-container { width: 100%; aspect-ratio: 1; display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(5, 1fr); gap: 8px; background: var(--panel); padding: 12px; border-radius: 20px; border: 1px solid var(--line); }
+.tile { background: linear-gradient(135deg, #1c1c1c 0%, #0a0a0a 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 32px; cursor: pointer; position: relative; transition: 0.2s, transform 0.1s; box-shadow: inset 0 -4px 0 #000, inset 0 2px 0 rgba(255,255,255,0.1); user-select: none; }
+.tile:active:not(.revealed) { transform: scale(0.92); }
+.tile.revealed { background: #000; box-shadow: inset 0 0 15px rgba(0,0,0,1); cursor: default; }
+.tile.gem { animation: pop 0.3s; color: var(--green); text-shadow: 0 0 15px var(--green); font-size: 24px; }
+.tile.bomb { background: linear-gradient(135deg, var(--red) 0%, #660015 100%); animation: shake 0.4s; color: #fff; font-size: 24px; }
+@keyframes pop { 0%{transform:scale(0.3); opacity:0} 100%{transform:scale(1); opacity:1} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+
+.controls { display: flex; flex-direction: column; gap: 10px; }
+.input-row { display: flex; gap: 10px; }
+.bet-input { flex: 1; background: #000; border: 1px solid var(--line); border-radius: 12px; color: var(--gold); padding: 12px; font-family: var(--font-en); font-size: 18px; font-weight: 700; text-align: center; outline: none; }
+.action-btn { background: linear-gradient(180deg, var(--red), #990022); color: #fff; border: 2px solid #ff667f; border-radius: 12px; padding: 12px 20px; font-weight: 900; font-size: 16px; cursor: pointer; flex: 1; }
+.action-btn.cashout { background: linear-gradient(180deg, var(--green), #009955); color: #000; border-color: #66ffb3; }
+.action-btn:disabled { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="buysell.html" class="back-btn">🔙 منو</a>
+  <div class="balance-box"><span id="balanceDisplay">0</span> <span style="font-size:10px;">T</span></div>
+</div>
+
+<div class="container">
+  <div class="notif-bar neutral" id="notificationBar">برای شروع بازی، مبلغ را وارد کرده و شروع را بزن
