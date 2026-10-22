@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>KIANI PLINKO 3D</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Vazirmatn:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050505; --panel: #111111; --line: #332b00;
+  --text: #ffffff; --muted: #888888;
+  --gold: #ffcc00; --red: #ff3355; --green: #00ff88; --cyan: #00e5ff;
+  --font-fa: 'Vazirmatn', Tahoma, sans-serif;
+  --font-en: 'Orbitron', sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body {
+  margin:0; padding:0; 
+  background: radial-gradient(circle at 50% 0%, #1a1500 0%, #000000 100%);
+  color: var(--text); font-family: var(--font-fa);
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+  overflow-x: hidden; user-select: none;
+}
+
+/* Header */
+.top-bar {
+  width: 100%; max-width: 600px; display: flex; justify-content: space-between;
+  align-items: center; padding: 10px 15px; background: rgba(0,0,0,0.8);
+  border-bottom: 1px solid var(--line); border-radius: 0 0 16px 16px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.8), 0 0 15px rgba(255,204,0,0.1); backdrop-filter: blur(10px);
+  position: relative; z-index: 10;
+}
+.back-btn { color: var(--gold); text-decoration: none; font-weight: 700; font-size: 14px; }
+.balance-box {
+  background: #000; padding: 6px 12px; border-radius: 12px; border: 1px solid var(--gold);
+  font-family: var(--font-en); font-weight: 900; color: var(--gold); font-size: 16px;
+  box-shadow: inset 0 0 10px rgba(255,204,0,0.3);
+}
+
+/* Game Area */
+.game-container {
+  width: 100%; max-width: 500px; padding: 10px; display: flex; flex-direction: column; align-items: center;
+}
+
+/* Canvas */
+.canvas-wrapper {
+  width: 100%; aspect-ratio: 1;
+  position: relative; border-radius: 20px;
+  background: radial-gradient(circle at 50% 50%, #1a0000 0%, #050505 100%);
+  border: 2px solid var(--line);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.9), inset 0 0 30px rgba(255,51,85,0.1);
+  overflow: hidden;
+}
+canvas { width: 100%; height: 100%; display: block; }
+
+/* Controls Row */
+.controls-row {
+  width: 100%; margin-top: 15px; display: flex; gap: 10px; align-items: stretch;
+}
+
+/* تاریخچه مینی‌مال */
+.mini-history-container {
+  width: 70px; background: #000; border: 1px solid var(--line);
+  border-radius: 10px; padding: 5px; display: flex; flex-direction: column;
+  gap: 3px; align-items: center; justify-content: center;
+}
+.h-title { font-size: 9px; color: var(--muted); }
+.h-list { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; }
+.h-item {
+  font-family: var(--font-en); font-size: 9px; font-weight: 900;
+  padding: 2px 4px; border-radius: 4px; min-width: 18px; text-align: center;
+}
+.h-win { color: var(--gold); background: rgba(255,204,0,0.1); border: 1px solid rgba(255,204,0,0.3); }
+.h-lose { color: var(--red); background: rgba(255,51,85,0.1); border: 1px solid rgba(255,51,85,0.3); }
+
+/* Inputs and Buttons */
+.input-group { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.bet-input {
+  width: 100%; background: #000; border: 1px solid var(--line); border-radius: 10px;
+  color: var(--gold); padding: 10px; font-family: var(--font-en); font-size: 16px; font-weight: 700;
+  outline: none; text-align: center;
+}
+.action-btns { display: flex; gap: 5px; }
+.play-btn {
+  width: 100%; background: linear-gradient(180deg, #ff3355, #990022);
+  border: 2px solid #ff667f; border-radius: 10px; padding: 12px; font-size: 14px; font-weight: 900;
+  color: #fff; cursor: pointer; transition: 0.2s; text-align: center;
+}
+.play-btn:active { transform: translateY(2px); }
+.play-btn:disabled { opacity: 0.5; filter: grayscale(1); }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: #111; border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px;
+  border-radius: 20px; font-weight: 700; opacity: 0; transition: 0.3s; pointer-events: none;
+  z-index: 100; font-size: 14px;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.err { border-color: var(--red); color: var(--red); }
+
+/* Result Popup */
+.result-popup {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
+  background: rgba(10,10,10,0.95); backdrop-filter: blur(20px);
+  padding: 25px 40px; border-radius: 20px; text-align: center;
+  border: 2px solid var(--line); box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+  opacity: 0; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none;
+  z-index: 50;
+}
+.result-popup.show { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+.res-mult { font-family: var(--font-en); font-size: 50px; font-weight: 900; line-height: 1; margin-bottom: 5px; }
+.res-text { font-size: 16px; font-weight: 700; color: var(--muted); }
+.res-text span { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="#" class="back-btn" onclick="window.history.back(); return false;">🔙 بازگشت</a>
+  <div class="balance-box">
+    <span id="balanceDisplay">0</span> <span style="font-size:10px; color:var(--muted)">T</span>
+  </div>
+</div>
+
+<div class="game-container">
+  <div class="canvas-wrapper">
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
+  </div>
+  
+  <div class="controls-row">
+    <!-- تاریخچه مینی‌مال کنار ورودی -->
+    <div class="mini-history-container">
+      <div class="h-title">اخیر</div>
+      <div class="h-list" id="historyList"></div>
+    </div>
+
+    <!-- ورودی‌ها و دکمه‌ها -->
+    <div class="input-group">
+      <input type="number" id="betAmount" class="bet-input" value="10" min="1">
+      <div class="action-btns">
+        <button class="play-btn" id="playBtn" onclick="dropBall()">پرتاب توپ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="result-popup" id="resultPopup">
+  <div class="res-mult" id="resMult">0x</div>
+  <div class="res-text" id="resText"></div>
+</div>
+
+<script>
+"use strict";
+
+// ==========================================
+// ۱. اتصال به دیتابیس
+// ==========================================
+var STORAGE_KEY = "kiani_spin_v4_db";
+var db = { users: {}, currentUser: null };
+var state = null;
+
+function initDB() {
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) db.users = JSON.parse(saved);
+    for (var u in db.users) { db.currentUser = u; state = db.users[u].data; break; }
+  } catch(e) {}
+}
+function saveState() {
+  if (db.currentUser && db.users[db.currentUser]) {
+    db.users[db.currentUser].data = state;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(db.users));
+  }
+}
+function updateBalanceUI() {
+  if (state) document.getElementById("balanceDisplay").textContent = state.tokens.toLocaleString("en-US");
+  else document.getElementById("balanceDisplay").textContent = "0";
+}
+function toast(msg, isErr) {
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.className = "toast show " + (isErr ? "err" : "");
+  setTimeout(function(){ t.className = "toast"; }, 2500);
+}
+
+// ==========================================
+// ۲. تنظیمات و فیزیک
+// ==========================================
+var canvas = document.getElementById("gameCanvas");
+var ctx = canvas.getContext("2d");
+var W = canvas.width;
+var H = canvas.height;
+
+var rows = 12;
+var pegRadius = 5;
+var ballRadius = 10;
+var pegGapX = 38; 
+var pegGapY = 40; 
+var startY = 70;
+
+// دیواره‌های محافظ
+var wallX1 = 60; 
+var wallX2 = W - 60; 
+
+// ضرایب جدید: حذف 12 و جایگزینی با 0.2 در دو طرف
+var multipliers = [10, 0.2, 5, 2, 1.5, 1, 0, 0.2, 0, 1, 0, 1.5, 2, 5, 0.2, 10];
+var multColors = [
+  "#ff3355", "#333333", "#ffffff", "#ffcc00", "#ff3355", "#ffcc00", "#333333", 
+  "#333333", "#333333", "#ffcc00", "#333333", "#ff3355", "#ffcc00", "#ffffff", "#333333", "#ff3355"
+];
+
+var pegs = [];
+var balls = [];
+var bins = [];
+
+function initBoard() {
+  pegs = [];
+  bins = [];
+  
+  for (var r = 0; r < rows; r++) {
+    var pegsInRow = r + 3;
+    var rowStartX = (W - (pegsInRow - 1) * pegGapX) / 2;
+    for (var c = 0; c < pegsInRow; c++) {
+      pegs.push({
+        x: rowStartX + c * pegGapX,
+        y: startY + r * pegGapY,
+        hit: 0
+      });
+    }
+  }
+
+  var totalMult = multipliers.length;
+  var binWidth = (wallX2 - wallX1) / totalMult;
+  for (var i = 0; i < totalMult; i++) {
+    bins.push({
+      x: wallX1 + (i * binWidth),
+      y: H - 40,
+      w: binWidth,
+      h: 40,
+      mult: multipliers[i],
+      color: multColors[i]
+    });
+  }
+}
+
+// ==========================================
+// ۳. موتور فیزیک
+// ==========================================
+function updatePhysics() {
+  for (var i = balls.length - 1; i >= 0; i--) {
+    var b = balls[i];
+    b.vy += 0.3; 
+    b.x += b.vx;
+    b.y += b.vy;
+    b.vx *= 0.98;
+    
+    if (b.x < wallX1 + ballRadius) { b.x = wallX1 + ballRadius; b.vx *= -0.6; }
+    if (b.x > wallX2 - ballRadius) { b.x = wallX2 - ballRadius; b.vx *= -0.6; }
+
+    for (var j = 0; j < pegs.length; j++) {
+      var p = pegs[j];
+      var dx = b.x - p.x;
+      var dy = b.y - p.y;
+      var dist = Math.sqrt(dx*dx + dy*dy);
+      
+      if (dist < ballRadius + pegRadius) {
+        var nx = dx / dist;
+        var ny = dy / dist;
+        var overlap = ballRadius + pegRadius - dist;
+        
+        b.x += nx * overlap;
+        b.y += ny * overlap;
+        
+        var dot = b.vx * nx + b.vy * ny;
+        b.vx = (b.vx - 2 * dot * nx) * 0.7; 
+        b.vy = (b.vy - 2 * dot * ny) * 0.7;
+        
+        p.hit = 1;
+      }
+    }
+
+    if (b.y > H - 40 - ballRadius) {
+      for (var k = 0; k < bins.length; k++) {
+        var bin = bins[k];
+        if (b.x >= bin.x && b.x < bin.x + bin.w) {
+          processResult(bin.mult, b.color, b.bet);
+          break;
+        }
+      }
+      balls.splice(i, 1);
+    }
+  }
+  
+  for (var j = 0; j < pegs.length; j++) {
+    if (pegs[j].hit > 0) pegs[j].hit -= 0.05;
+  }
+}
+
+// ==========================================
+// ۴. رندر
+// ==========================================
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.strokeStyle = "#ffcc00"; ctx.lineWidth = 4; ctx.shadowColor = "#ffcc00"; ctx.shadowBlur = 15;
+  ctx.beginPath(); ctx.moveTo(wallX1, 0); ctx.lineTo(wallX1, H); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(wallX2, 0); ctx.lineTo(wallX2, H); ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  for (var i = 0; i < pegs.length; i++) {
+    var p = pegs[i];
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, pegRadius, 0, Math.PI * 2);
+    
+    var grad = ctx.createRadialGradient(p.x - 2, p.y - 2, 1, p.x, p.y, pegRadius);
+    if (p.hit > 0) {
+      grad.addColorStop(0, "#fff"); grad.addColorStop(1, "#ff3355");
+      ctx.shadowColor = "#ff3355"; ctx.shadowBlur = 15;
+    } else {
+      grad.addColorStop(0, "#ffcc00"); grad.addColorStop(1, "#664d00");
+      ctx.shadowBlur = 0;
+    }
+    ctx.fillStyle = grad;
+    ctx.fill();
+  }
+  ctx.shadowBlur = 0;
+
+  for (var i = 0; i < bins.length; i++) {
+    var bin = bins[i];
+    ctx.fillStyle = bin.color; ctx.globalAlpha = 0.15;
+    ctx.fillRect(bin.x, bin.y, bin.w, bin.h);
+    ctx.globalAlpha = 1; ctx.strokeStyle = bin.color;
+    ctx.strokeRect(bin.x, bin.y, bin.w, bin.h);
+    
+    ctx.fillStyle = "#fff"; ctx.font = "bold 10px 'Orbitron', sans-serif";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(bin.mult + "x", bin.x + bin.w/2, bin.y + bin.h/2);
+  }
+
+  for (var i = 0; i < balls.length; i++) {
+    var b = balls[i];
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, ballRadius, 0, Math.PI * 2);
+    var grad = ctx.createRadialGradient(b.x - 3, b.y - 3, 1, b.x, b.y, ballRadius);
+    grad.addColorStop(0, "#fff"); grad.addColorStop(0.4, "#ff3355"); grad.addColorStop(1, "#990022");
+    ctx.fillStyle = grad; ctx.shadowColor = "#ff3355"; ctx.shadowBlur = 15;
+    ctx.fill();
+  }
+  ctx.shadowBlur = 0;
+}
+
+// ==========================================
+// ۵. منطق بازی
+// ==========================================
+function dropBall() {
+  if (!state) { toast("ابتدا لاگین کنید.", true); return; }
+  
+  var bet = parseInt(document.getElementById("betAmount").value);
+  if (!bet || bet < 1) { toast("مبلغ نامعتبر است.", true); return; }
+  if (state.tokens < bet) { toast("موجودی کافی نیست!", true); return; }
+  
+  state.tokens -= bet;
+  saveState();
+  updateBalanceUI();
+  
+  document.getElementById("playBtn").disabled = true;
+  
+  balls.push({
+    x: W / 2 + (Math.random() - 0.5) * 20,
+    y: 30,
+    vx: (Math.random() - 0.5) * 3,
+    vy: 0,
+    bet: bet,
+    color: "#ff3355"
+  });
+}
+
+function processResult(mult, color, bet) {
+  var win = Math.floor(bet * mult);
+  state.tokens += win;
+  saveState();
+  updateBalanceUI();
+  
+  var amountDelta = win - bet;
+  state.history.unshift({ type: "spin", mult: mult, amount: amountDelta, time: new Date().toLocaleString("fa-IR") });
+  if(state.history.length > 50) state.history.pop();
+  saveState();
+  renderHistory();
+  
+  document.getElementById("playBtn").disabled = false;
+  showResultPopup(mult, win);
+}
+
+function renderHistory() {
+  var list = document.getElementById("historyList");
+  if (!list || !state) return;
+  list.innerHTML = "";
+  var count = Math.min(state.history.length, 4);
+  for (var i = 0; i < count; i++) {
+    var h = state.history[i];
+    if (h.type === "spin") {
+      var isWin = h.mult >= 1;
+      var div = document.createElement("div");
+      div.className = "h-item " + (isWin ? "h-win" : "h-lose");
+      div.textContent = h.mult + "x";
+      list.appendChild(div);
+    }
+  }
+}
+
+function showResultPopup(mult, win) {
+  var popup = document.getElementById("resultPopup");
+  var multEl = document.getElementById("resMult");
+  var textEl = document.getElementById("resText");
+  
+  multEl.textContent = mult + "x";
+  multEl.style.color = mult >= 1 ? "var(--gold)" : "var(--red)";
+  textEl.innerHTML = mult > 0 ? "برد: <span>" + win + "</span> T" : "باخت";
+  
+  popup.classList.add("show");
+  setTimeout(function(){ popup.classList.remove("show"); }, 2000);
+}
+
+// ==========================================
+// ۶. حلقه انیمیشن
+// ==========================================
+function gameLoop() {
+  updatePhysics();
+  draw();
+  requestAnimationFrame(gameLoop);
+}
+
+initDB();
+updateBalanceUI();
+renderHistory();
+initBoard();
+gameLoop();
+
+</script>
+</body>
+</html>
