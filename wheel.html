@@ -1,0 +1,1599 @@
+
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<title>SPIN | چرخ شانس</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Vazirmatn:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --bg:#020817;
+    --panel:#06152d;
+    --panel2:#081d3d;
+
+    --blue:#168cff;
+    --cyan:#00eaff;
+    --purple:#8d35ff;
+    --pink:#d42cff;
+
+    --gold:#ffd21c;
+    --gold2:#ff9d00;
+
+    --green:#00f5a0;
+    --red:#ff416c;
+
+    --white:#f5f9ff;
+    --muted:#91a5c6;
+
+    --border:rgba(40,130,255,.45);
+
+    --en:'Orbitron',sans-serif;
+    --fa:'Vazirmatn',sans-serif;
+}
+
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    min-height:100%;
+}
+
+body{
+    background:
+        radial-gradient(circle at 50% -10%,rgba(0,110,255,.30),transparent 38%),
+        radial-gradient(circle at 100% 60%,rgba(119,0,255,.20),transparent 30%),
+        radial-gradient(circle at 0% 80%,rgba(0,190,255,.12),transparent 30%),
+        #020817;
+
+    color:var(--white);
+    font-family:var(--fa);
+    overflow-x:hidden;
+}
+
+/* خطوط نور پس زمینه */
+body:before,
+body:after{
+    content:"";
+    position:fixed;
+    width:500px;
+    height:2px;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        #087cff,
+        #00eaff,
+        transparent
+    );
+    opacity:.45;
+    filter:blur(1px);
+    z-index:-1;
+}
+
+body:before{
+    top:130px;
+    left:-180px;
+    transform:rotate(28deg);
+}
+
+body:after{
+    bottom:120px;
+    right:-180px;
+    transform:rotate(-28deg);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+    width:calc(100% - 48px);
+    max-width:1380px;
+    height:92px;
+
+    margin:24px auto 0;
+
+    border:1px solid rgba(36,124,255,.55);
+    border-radius:28px;
+
+    background:
+        linear-gradient(
+            110deg,
+            rgba(7,25,55,.92),
+            rgba(2,13,35,.92)
+        );
+
+    box-shadow:
+        0 0 35px rgba(0,89,255,.15),
+        inset 0 0 30px rgba(0,112,255,.06);
+
+    backdrop-filter:blur(18px);
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 28px;
+}
+
+/* logo */
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.logo-icon{
+    width:48px;
+    height:48px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:26px;
+
+    background:
+        conic-gradient(
+            #0d5eff,
+            #00eaff,
+            #145cff,
+            #8d35ff,
+            #0d5eff
+        );
+
+    box-shadow:
+        0 0 22px rgba(0,180,255,.55);
+
+    position:relative;
+}
+
+.logo-icon:after{
+    content:"";
+    position:absolute;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:#06152f;
+}
+
+.logo-icon span{
+    position:relative;
+    z-index:2;
+}
+
+.logo-text{
+    font-family:var(--en);
+    font-size:30px;
+    font-weight:900;
+    letter-spacing:2px;
+
+    background:linear-gradient(
+        90deg,
+        #fff,
+        #8edcff
+    );
+
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+/* nav */
+
+.nav{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.nav-item{
+    min-width:125px;
+    height:58px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+
+    border-radius:16px;
+
+    color:#a9bddc;
+    font-size:15px;
+
+    cursor:pointer;
+}
+
+.nav-item.active{
+    color:var(--cyan);
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0,202,255,.12),
+            rgba(0,95,255,.03)
+        );
+
+    box-shadow:
+        inset 0 -3px 0 var(--cyan),
+        0 0 20px rgba(0,220,255,.08);
+}
+
+.nav-icon{
+    font-size:22px;
+}
+
+/* account */
+
+.header-user{
+    width:54px;
+    height:54px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #073e79,
+            #06172f
+        );
+
+    border:1px solid #197bff;
+
+    color:#5fdcff;
+    font-size:25px;
+
+    box-shadow:
+        0 0 18px rgba(0,117,255,.25);
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.page{
+    width:calc(100% - 48px);
+    max-width:1380px;
+
+    margin:38px auto 50px;
+
+    display:grid;
+    grid-template-columns:minmax(0,1.65fr) minmax(330px,.9fr);
+
+    gap:20px;
+}
+
+/* cards */
+
+.card{
+    border:1px solid rgba(34,123,255,.58);
+    border-radius:27px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(5,28,61,.92),
+            rgba(3,15,36,.96)
+        );
+
+    box-shadow:
+        0 0 30px rgba(0,91,255,.10),
+        inset 0 0 40px rgba(0,90,255,.035);
+
+    position:relative;
+    overflow:hidden;
+}
+
+.card:before{
+    content:"";
+    position:absolute;
+    width:250px;
+    height:250px;
+
+    top:-170px;
+    left:30%;
+
+    background:#087cff;
+    filter:blur(100px);
+    opacity:.15;
+
+    pointer-events:none;
+}
+
+/* =========================
+   WHEEL CARD
+========================= */
+
+.game-card{
+    min-height:830px;
+
+    padding:24px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.game-title{
+    width:100%;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:10px;
+}
+
+.game-title h1{
+    margin:0;
+
+    font-size:23px;
+    font-weight:800;
+}
+
+.game-title span{
+    color:var(--cyan);
+    font-size:13px;
+}
+
+/* wheel */
+
+.wheel-area{
+    width:min(680px,100%);
+
+    aspect-ratio:1;
+
+    position:relative;
+
+    margin:12px auto 15px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.wheel-glow{
+    position:absolute;
+
+    width:94%;
+    height:94%;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,180,255,.20),
+            transparent 68%
+        );
+
+    filter:blur(25px);
+}
+
+.wheel-ring{
+    position:absolute;
+
+    width:94%;
+    height:94%;
+
+    border-radius:50%;
+
+    border:7px solid var(--gold);
+
+    box-shadow:
+        0 0 10px #fff,
+        0 0 25px var(--gold),
+        0 0 55px rgba(255,175,0,.55);
+
+    z-index:1;
+}
+
+#wheel{
+    width:89%;
+    height:89%;
+
+    border-radius:50%;
+
+    position:relative;
+    z-index:2;
+
+    transition:
+        transform 6s cubic-bezier(.12,.76,.13,1);
+
+    box-shadow:
+        inset 0 0 20px rgba(0,0,0,.7),
+        0 0 20px rgba(0,130,255,.25);
+}
+
+#wheel svg{
+    width:100%;
+    height:100%;
+    display:block;
+
+    border-radius:50%;
+}
+
+/* pointer */
+
+.pointer{
+    position:absolute;
+
+    top:-7px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:0;
+    height:0;
+
+    border-left:25px solid transparent;
+    border-right:25px solid transparent;
+    border-top:52px solid #ffd21c;
+
+    filter:
+        drop-shadow(0 0 5px #fff)
+        drop-shadow(0 0 14px #ffb000);
+
+    z-index:20;
+}
+
+/* center */
+
+.wheel-center{
+    position:absolute;
+
+    width:100px;
+    height:100px;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            #113c79,
+            #04132b
+        );
+
+    border:5px solid var(--gold);
+
+    z-index:10;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:38px;
+
+    box-shadow:
+        0 0 15px #00aaff,
+        0 0 30px rgba(255,193,0,.5);
+}
+
+/* controls */
+
+.controls{
+    width:min(650px,100%);
+
+    margin-top:auto;
+}
+
+.bet-label{
+    color:#8fa9ce;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.bet-list{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+
+    gap:8px;
+
+    margin-bottom:12px;
+}
+
+.bet{
+    height:48px;
+
+    border-radius:13px;
+
+    border:1px solid rgba(25,108,230,.5);
+
+    background:#061735;
+
+    color:#dcecff;
+
+    font-family:var(--en);
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.bet.active{
+    background:
+        linear-gradient(
+            180deg,
+            #ffd934,
+            #f2a900
+        );
+
+    color:#111;
+
+    border-color:#ffe25c;
+
+    box-shadow:
+        0 0 18px rgba(255,194,0,.45);
+}
+
+.spin{
+    width:100%;
+
+    height:74px;
+
+    border:0;
+    border-radius:20px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffe344,
+            #ffae00
+        );
+
+    color:#161616;
+
+    font-family:var(--fa);
+    font-size:23px;
+    font-weight:900;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 7px 25px rgba(255,179,0,.32),
+        inset 0 2px 0 rgba(255,255,255,.65);
+
+    transition:.2s;
+}
+
+.spin:hover{
+    filter:brightness(1.08);
+}
+
+.spin:active{
+    transform:scale(.985);
+}
+
+.spin:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+    filter:grayscale(.5);
+}
+
+/* =========================
+   SIDE
+========================= */
+
+.side{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+/* stat */
+
+.stat{
+    min-height:170px;
+
+    padding:22px 25px;
+
+    position:relative;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(6,33,70,.96),
+            rgba(3,16,40,.96)
+        );
+
+    border:1px solid rgba(0,190,255,.55);
+
+    box-shadow:
+        0 0 20px rgba(0,183,255,.08);
+}
+
+.stat.purple{
+    border-color:rgba(181,49,255,.65);
+
+    box-shadow:
+        0 0 25px rgba(180,35,255,.10);
+}
+
+.stat.gold{
+    border-color:rgba(255,205,0,.55);
+}
+
+.stat-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    color:#d7e6ff;
+
+    font-size:15px;
+}
+
+.stat-icon{
+    font-size:27px;
+}
+
+.stat-value{
+    margin-top:18px;
+
+    font-family:var(--en);
+
+    font-size:48px;
+    font-weight:900;
+
+    letter-spacing:1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #fff,
+            #74dcff
+        );
+
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.purple .stat-value{
+    background:
+        linear-gradient(
+            90deg,
+            #fff,
+            #d992ff
+        );
+
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.gold .stat-value{
+    background:
+        linear-gradient(
+            90deg,
+            #fff,
+            #ffd21c
+        );
+
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.stat-decoration{
+    position:absolute;
+
+    right:22px;
+    bottom:15px;
+
+    font-size:60px;
+
+    opacity:.18;
+}
+
+/* history */
+
+.history{
+    flex:1;
+
+    padding:22px;
+
+    border-radius:22px;
+
+    border:1px solid rgba(74,125,255,.45);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(5,26,55,.95),
+            rgba(3,14,33,.96)
+        );
+}
+
+.history-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:16px;
+}
+
+.history-title{
+    font-size:18px;
+    font-weight:800;
+}
+
+.history-clear{
+    color:#6f9fd7;
+    font-size:12px;
+    cursor:pointer;
+}
+
+.history-list{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+.history-item{
+    min-height:54px;
+
+    padding:8px 12px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    border-radius:12px;
+
+    background:rgba(4,21,47,.85);
+
+    border:1px solid rgba(50,105,200,.18);
+}
+
+.history-mult{
+    font-family:var(--en);
+    font-weight:900;
+}
+
+.win{
+    color:var(--green);
+}
+
+.loss{
+    color:var(--red);
+}
+
+.history-bet{
+    color:#839ac0;
+    font-size:12px;
+}
+
+/* =========================
+   RESULT
+========================= */
+
+.overlay{
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,5,18,.75);
+
+    backdrop-filter:blur(8px);
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    z-index:1000;
+
+    padding:20px;
+}
+
+.overlay.show{
+    display:flex;
+}
+
+.result{
+    width:min(420px,100%);
+
+    border-radius:28px;
+
+    padding:35px 25px;
+
+    text-align:center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #09285a,
+            #040e25
+        );
+
+    border:2px solid var(--cyan);
+
+    box-shadow:
+        0 0 40px rgba(0,210,255,.30),
+        0 0 90px rgba(110,30,255,.15);
+
+    animation:resultIn .35s ease;
+}
+
+@keyframes resultIn{
+    from{
+        transform:scale(.75);
+        opacity:0;
+    }
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+.result-small{
+    color:#9cb6db;
+    font-size:14px;
+}
+
+.result-mult{
+    margin:12px 0;
+
+    font-family:var(--en);
+    font-size:68px;
+    font-weight:900;
+
+    background:
+        linear-gradient(
+            90deg,
+            #fff,
+            #ffd21c,
+            #ff8b00
+        );
+
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.result-message{
+    font-size:17px;
+    margin-bottom:25px;
+}
+
+.close-result{
+    width:100%;
+
+    height:52px;
+
+    border:0;
+    border-radius:14px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffd936,
+            #f2a600
+        );
+
+    font-family:var(--fa);
+    font-weight:900;
+
+    cursor:pointer;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:950px){
+
+    .header{
+        height:76px;
+        width:calc(100% - 24px);
+        margin-top:12px;
+        padding:0 15px;
+        border-radius:20px;
+    }
+
+    .logo-text{
+        font-size:21px;
+    }
+
+    .logo-icon{
+        width:39px;
+        height:39px;
+        font-size:21px;
+    }
+
+    .nav{
+        display:none;
+    }
+
+    .page{
+        width:calc(100% - 24px);
+
+        margin-top:14px;
+
+        grid-template-columns:1fr;
+
+        gap:14px;
+    }
+
+    .game-card{
+        min-height:auto;
+        padding:15px;
+        border-radius:22px;
+    }
+
+    .game-title{
+        margin-bottom:4px;
+    }
+
+    .game-title h1{
+        font-size:18px;
+    }
+
+    .wheel-area{
+        width:min(520px,100%);
+        margin:8px auto 12px;
+    }
+
+    .wheel-center{
+        width:70px;
+        height:70px;
+        font-size:28px;
+        border-width:4px;
+    }
+
+    .pointer{
+        border-left-width:19px;
+        border-right-width:19px;
+        border-top-width:39px;
+    }
+
+    .side{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+    }
+
+    .history{
+        grid-column:1/-1;
+    }
+}
+
+@media(max-width:560px){
+
+    .page{
+        width:calc(100% - 12px);
+    }
+
+    .header{
+        width:calc(100% - 12px);
+    }
+
+    .header-user{
+        width:43px;
+        height:43px;
+    }
+
+    .logo-text{
+        font-size:17px;
+    }
+
+    .logo-icon{
+        width:35px;
+        height:35px;
+    }
+
+    .bet-list{
+        gap:5px;
+    }
+
+    .bet{
+        height:44px;
+        font-size:12px;
+    }
+
+    .spin{
+        height:62px;
+        font-size:20px;
+    }
+
+    .side{
+        grid-template-columns:1fr;
+    }
+
+    .stat{
+        min-height:135px;
+    }
+
+    .stat-value{
+        font-size:38px;
+    }
+
+    .stat-decoration{
+        font-size:48px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+    <div class="logo">
+        <div class="logo-icon">
+            <span>✦</span>
+        </div>
+
+        <div class="logo-text">
+            SPIN
+        </div>
+    </div>
+
+    <nav class="nav">
+
+        <div class="nav-item active">
+            <span class="nav-icon">◉</span>
+            <span>چرخ شانس</span>
+        </div>
+
+        <div class="nav-item" onclick="scrollToHistory()">
+            <span class="nav-icon">🎁</span>
+            <span>جوایز</span>
+        </div>
+
+        <div class="nav-item" onclick="scrollToHistory()">
+            <span class="nav-icon">◷</span>
+            <span>تاریخچه</span>
+        </div>
+
+    </nav>
+
+    <div class="header-user" onclick="window.location.href='buysell.html'">
+        👤
+    </div>
+
+</header>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="page">
+
+    <!-- GAME -->
+
+    <section class="card game-card">
+
+        <div class="game-title">
+            <h1>چرخ شانس</h1>
+            <span>هر چرخش یک شانس جدید</span>
+        </div>
+
+        <div class="wheel-area">
+
+            <div class="wheel-glow"></div>
+
+            <div class="wheel-ring"></div>
+
+            <div id="wheel"></div>
+
+            <div class="wheel-center">
+                🎁
+            </div>
+
+            <div class="pointer"></div>
+
+        </div>
+
+
+        <div class="controls">
+
+            <div class="bet-label">
+                مبلغ چرخش را انتخاب کنید
+            </div>
+
+            <div class="bet-list">
+
+                <button class="bet" data-value="5">
+                    5
+                </button>
+
+                <button class="bet" data-value="10">
+                    10
+                </button>
+
+                <button class="bet active" data-value="25">
+                    25
+                </button>
+
+                <button class="bet" data-value="50">
+                    50
+                </button>
+
+                <button class="bet" data-value="100">
+                    100
+                </button>
+
+            </div>
+
+            <button
+                id="spinBtn"
+                class="spin"
+                onclick="spin()"
+            >
+                🔄 چرخش
+                <span id="spinCost">25</span>
+                T
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- SIDE PANEL -->
+
+    <aside class="side">
+
+        <!-- LAST WIN -->
+
+        <div class="stat">
+
+            <div class="stat-title">
+                <span class="stat-icon">◷</span>
+                <span>آخرین برد</span>
+            </div>
+
+            <div
+                class="stat-value"
+                id="lastWin"
+            >
+                1.5x
+            </div>
+
+            <div class="stat-decoration">
+                🏆
+            </div>
+
+        </div>
+
+
+        <!-- MAX MULTIPLIER -->
+
+        <div class="stat purple">
+
+            <div class="stat-title">
+                <span class="stat-icon">★</span>
+                <span>بالاترین ضریب</span>
+            </div>
+
+            <div
+                class="stat-value"
+                id="maxMultiplier"
+            >
+                1.5x
+            </div>
+
+            <div class="stat-decoration">
+                ♛
+            </div>
+
+        </div>
+
+
+        <!-- BALANCE -->
+
+        <div class="stat gold">
+
+            <div class="stat-title">
+                <span class="stat-icon">◎</span>
+                <span>موجودی توکن</span>
+            </div>
+
+            <div
+                class="stat-value"
+                id="balanceDisplay"
+            >
+                0
+            </div>
+
+            <div class="stat-decoration">
+                🪙
+            </div>
+
+        </div>
+
+
+        <!-- HISTORY -->
+
+        <div
+            class="history"
+            id="historyBox"
+        >
+
+            <div class="history-head">
+
+                <div class="history-title">
+                    تاریخچه چرخش
+                </div>
+
+                <div
+                    class="history-clear"
+                    onclick="clearHistory()"
+                >
+                    پاک کردن
+                </div>
+
+            </div>
+
+            <div
+                class="history-list"
+                id="historyList"
+            ></div>
+
+        </div>
+
+    </aside>
+
+</main>
+
+
+<!-- =========================
+     RESULT
+========================= -->
+
+<div
+    class="overlay"
+    id="resultOverlay"
+>
+
+    <div class="result">
+
+        <div class="result-small">
+            نتیجه چرخش
+        </div>
+
+        <div
+            class="result-mult"
+            id="resultMultiplier"
+        >
+            2x
+        </div>
+
+        <div
+            class="result-message"
+            id="resultMessage"
+        >
+            شما برنده شدید!
+        </div>
+
+        <button
+            class="close-result"
+            onclick="closeResult()"
+        >
+            ادامه
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+"use strict";
+
+/* =====================================
+   DATABASE (متصل به کیف پول مشترک)
+===================================== */
+
+const WALLET_KEY = "kiani_exchange_v5";
+const SESSION_KEY = "kiani_exchange_session";
+
+let currentUser = null;
+let userData = null;
+
+let currentBet = 25;
+let currentRotation = 0;
+let spinning = false;
+
+const SEGMENTS = [
+    { mult:0, label:"0x", color:"#10264d" },
+    { mult:0.5, label:"0.5x", color:"#11c9e8" },
+    { mult:0.8, label:"0.8x", color:"#1769e8" },
+    { mult:1, label:"1x", color:"#ffd21c" },
+    { mult:1.1, label:"1.1x", color:"#ffb000" },
+    { mult:1.3, label:"1.3x", color:"#00cfff" },
+    { mult:1.5, label:"1.5x", color:"#b534ff" },
+    { mult:2, label:"2x", color:"#1c70ff" },
+    { mult:3, label:"3x", color:"#00c9e8" },
+    { mult:5, label:"5x", color:"#ffb51b" },
+    { mult:10, label:"10x", color:"#0ac7ef" },
+    { mult:20, label:"20x", color:"#c13cff" },
+    { mult:3, label:"3x", color:"#176cff" },
+    { mult:1.5, label:"1.5x", color:"#1bc7e5" },
+    { mult:2, label:"2x", color:"#155ee0" },
+    { mult:5, label:"5x", color:"#ffbd19" }
+];
+
+// شانس‌ها (وزن‌ها): ضریب 0 از 16 به 14.5 کاهش یافت و به ضرایب پایین اضافه شد
+const WEIGHTS = [14.5, 12.5, 10.5, 10.5, 8.5, 7.5, 6.5, 5.5, 4.5, 3.5, 2.5, 1, 4.5, 6.5, 5.5, 2.5];
+
+function loadWallet() {
+    try {
+        let saved = localStorage.getItem(WALLET_KEY);
+        if (!saved) {
+            document.body.innerHTML = "<h2 style='color:white;text-align:center;margin-top:50px;'>ابتدا در منو ثبت‌نام کنید.</h2>";
+            return;
+        }
+        let db = JSON.parse(saved);
+        currentUser = localStorage.getItem(SESSION_KEY);
+        if (currentUser && db.users[currentUser]) {
+            userData = db.users[currentUser];
+        } else {
+            document.body.innerHTML = "<h2 style='color:white;text-align:center;margin-top:50px;'>ابتدا در منو ورود کنید.</h2>";
+        }
+    } catch(e) {
+        console.log(e);
+    }
+}
+
+function saveWallet() {
+    if (currentUser && userData) {
+        let db = JSON.parse(localStorage.getItem(WALLET_KEY));
+        db.users[currentUser] = userData;
+        localStorage.setItem(WALLET_KEY, JSON.stringify(db));
+    }
+}
+
+function updateUI(){
+    if (userData) {
+        document.getElementById("balanceDisplay").textContent = Number(userData.tokens).toLocaleString("en-US");
+    }
+    document.getElementById("lastWin").textContent = (userData && userData.lastWin) ? userData.lastWin + "x" : "0x";
+    document.getElementById("maxMultiplier").textContent = (userData && userData.maxMultiplier) ? userData.maxMultiplier + "x" : "0x";
+    document.getElementById("spinCost").textContent = currentBet;
+    renderHistory();
+}
+
+function renderHistory(){
+    const list = document.getElementById("historyList");
+    list.innerHTML = "";
+
+    if(!userData || !userData.history || !userData.history.length){
+        list.innerHTML = `<div style="text-align:center;color:#7890b5;padding:25px 5px;font-size:13px;">هنوز چرخشی انجام نشده است.</div>`;
+        return;
+    }
+
+    let spins = userData.history.filter(h => h.game === "wheel");
+    if (spins.length === 0) {
+        list.innerHTML = `<div style="text-align:center;color:#7890b5;padding:25px 5px;font-size:13px;">هنوز چرخشی انجام نشده است.</div>`;
+        return;
+    }
+
+    spins.slice().reverse().slice(0,8).forEach(item => {
+        const row = document.createElement("div");
+        row.className = "history-item";
+
+        const multiplier = document.createElement("div");
+        multiplier.className = "history-mult " + (item.mult > 0 ? "win" : "loss");
+        multiplier.textContent = item.mult + "x";
+
+        const bet = document.createElement("div");
+        bet.className = "history-bet";
+        bet.textContent = "مبلغ: " + Number(item.bet).toLocaleString("en-US") + " T";
+
+        const result = document.createElement("div");
+        result.className = item.win > 0 ? "win" : "loss";
+        result.textContent = item.win > 0 ? "+" + item.win + " T" : "0 T";
+
+        row.appendChild(multiplier);
+        row.appendChild(bet);
+        row.appendChild(result);
+        list.appendChild(row);
+    });
+}
+
+function buildWheel(){
+    const container = document.getElementById("wheel");
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("viewBox", "0 0 100 100");
+
+    const count = SEGMENTS.length;
+    const angle = 360 / count;
+    const center = 50;
+    const radius = 49;
+
+    for(let i=0;i<count;i++){
+        const segment = SEGMENTS[i];
+        const startAngle = (i * angle - angle/2) * Math.PI / 180 - Math.PI/2;
+        const endAngle = (i * angle + angle/2) * Math.PI / 180 - Math.PI/2;
+
+        const x1 = center + radius * Math.cos(startAngle);
+        const y1 = center + radius * Math.sin(startAngle);
+        const x2 = center + radius * Math.cos(endAngle);
+        const y2 = center + radius * Math.sin(endAngle);
+
+        const path = document.createElementNS(svgNS, "path");
+        path.setAttribute("d", `M ${center} ${center} L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`);
+        path.setAttribute("fill", segment.color);
+        path.setAttribute("stroke", "#03142d");
+        path.setAttribute("stroke-width", "0.7");
+        svg.appendChild(path);
+
+        const middleAngle = (i * angle) * Math.PI / 180 - Math.PI/2;
+        const textRadius = radius * .67;
+        const tx = center + textRadius * Math.cos(middleAngle);
+        const ty = center + textRadius * Math.sin(middleAngle);
+
+        const text = document.createElementNS(svgNS, "text");
+        text.setAttribute("x", tx);
+        text.setAttribute("y", ty);
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("dominant-baseline", "middle");
+        text.setAttribute("fill", "#ffffff");
+        text.setAttribute("font-size", "4.2");
+        text.setAttribute("font-family", "Orbitron");
+        text.setAttribute("font-weight", "900");
+        text.setAttribute("transform", `rotate(${i * angle + 90} ${tx} ${ty})`);
+        text.textContent = segment.label;
+        svg.appendChild(text);
+    }
+    container.innerHTML = "";
+    container.appendChild(svg);
+}
+
+document.querySelectorAll(".bet").forEach(button => {
+    button.addEventListener("click", function(){
+        if(spinning) return;
+        document.querySelectorAll(".bet").forEach(btn => btn.classList.remove("active"));
+        this.classList.add("active");
+        currentBet = Number(this.dataset.value);
+        updateUI();
+    });
+});
+
+function chooseSegment(){
+    let total = 0;
+    for(const weight of WEIGHTS) total += weight;
+    let random = Math.random() * total;
+    for(let i=0; i<WEIGHTS.length; i++){
+        random -= WEIGHTS[i];
+        if(random <= 0) return i;
+    }
+    return 0;
+}
+
+function spin(){
+    if(spinning || !userData) return;
+
+    if(currentBet > userData.tokens){
+        showMessage("موجودی کافی نیست.");
+        return;
+    }
+    if(currentBet < 1){
+        showMessage("مبلغ چرخش نامعتبر است.");
+        return;
+    }
+
+    spinning = true;
+    const spinButton = document.getElementById("spinBtn");
+    spinButton.disabled = true;
+
+    userData.tokens -= currentBet;
+    updateUI();
+    saveWallet();
+
+    const chosenIndex = chooseSegment();
+    const segment = SEGMENTS[chosenIndex];
+    const count = SEGMENTS.length;
+    const segmentAngle = 360 / count;
+
+    const targetAngle = 360 - (chosenIndex * segmentAngle);
+    const current = currentRotation % 360;
+    const difference = (targetAngle - current + 360) % 360;
+    const extraSpins = 5 + Math.floor(Math.random() * 3);
+    const jitter = (Math.random() - .5) * segmentAngle * .55;
+    const finalRotation = currentRotation + extraSpins * 360 + difference + jitter;
+
+    currentRotation = finalRotation;
+    document.getElementById("wheel").style.transform = `rotate(${finalRotation}deg)`;
+
+    setTimeout(function(){
+        const win = Math.floor(currentBet * segment.mult);
+        userData.tokens += win;
+
+        if (!userData.lastWin || segment.mult > 0) userData.lastWin = segment.mult;
+        if (!userData.maxMultiplier || segment.mult > userData.maxMultiplier) userData.maxMultiplier = segment.mult;
+
+        if (!userData.history) userData.history = [];
+        userData.history.push({
+            game: "wheel",
+            mult: segment.mult,
+            bet: currentBet,
+            win: win,
+            ts: Date.now()
+        });
+
+        if(userData.history.length > 50) userData.history = userData.history.slice(-50);
+
+        saveWallet();
+        updateUI();
+
+        spinning = false;
+        spinButton.disabled = false;
+
+        showResult(segment.mult, win);
+    }, 6000);
+}
+
+function showResult(mult, win){
+    const overlay = document.getElementById("resultOverlay");
+    const multiplier = document.getElementById("resultMultiplier");
+    const message = document.getElementById("resultMessage");
+
+    multiplier.textContent = mult + "x";
+
+    if(mult > 0){
+        message.innerHTML = `🎉 تبریک! شما <strong style="color:#00f5a0">${win.toLocaleString("en-US")}</strong> توکن بردید.`;
+    } else {
+        message.innerHTML = `متأسفانه این بار چیزی برنده نشدید.`;
+    }
+
+    overlay.classList.add("show");
+}
+
+function closeResult(){
+    document.getElementById("resultOverlay").classList.remove("show");
+}
+
+function showMessage(text){
+    const overlay = document.getElementById("resultOverlay");
+    document.getElementById("resultMultiplier").textContent = "⚠";
+    document.getElementById("resultMessage").textContent = text;
+    overlay.classList.add("show");
+}
+
+function clearHistory(){
+    if(!userData || !userData.history) return;
+    if(!confirm("تاریخچه چرخش‌های این بازی پاک شود؟")) return;
+    
+    userData.history = userData.history.filter(h => h.game !== "wheel");
+    saveWallet();
+    updateUI();
+}
+
+function scrollToHistory(){
+    document.getElementById("historyBox").scrollIntoView({ behavior:"smooth" });
+}
+
+loadWallet();
+buildWheel();
+updateUI();
+
+</script>
+
+</body>
+</html>
+```
