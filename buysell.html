@@ -1,0 +1,2685 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#08090c">
+<title>LUCKY SPIN WALLET</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#08090c;
+  --bg2:#0d0f14;
+  --card:rgba(24,27,34,.72);
+  --card2:#15181f;
+  --line:rgba(255,255,255,.08);
+  --white:#fff;
+  --muted:#858b98;
+  --blue:#4d8dff;
+  --blue2:#276cff;
+  --cyan:#43d8ff;
+  --green:#35d07f;
+  --red:#ff5c6c;
+  --gold:#f4c95d;
+  --shadow:0 20px 60px rgba(0,0,0,.38);
+  --fa:'Vazirmatn',Tahoma,sans-serif;
+  --en:'Orbitron',sans-serif;
+}
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  background:var(--bg);
+  color:var(--white);
+  font-family:var(--fa);
+  min-height:100%;
+}
+
+body{
+  overflow-x:hidden;
+}
+
+button,input{
+  font-family:var(--fa);
+}
+
+button{
+  cursor:pointer;
+}
+
+.num{
+  font-family:var(--en);
+  direction:ltr;
+  unicode-bidi:isolate;
+}
+
+::-webkit-scrollbar{
+  width:0;
+  height:0;
+}
+
+/* =========================
+   BACKGROUND
+========================= */
+
+body::before{
+  content:"";
+  position:fixed;
+  width:420px;
+  height:420px;
+  top:-180px;
+  left:-180px;
+  background:rgba(47,128,237,.13);
+  filter:blur(100px);
+  border-radius:50%;
+  pointer-events:none;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  width:360px;
+  height:360px;
+  right:-180px;
+  bottom:100px;
+  background:rgba(80,70,255,.07);
+  filter:blur(100px);
+  border-radius:50%;
+  pointer-events:none;
+}
+
+/* =========================
+   AUTH
+========================= */
+
+#authScreen{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:24px;
+  background:
+    radial-gradient(circle at 50% 20%,rgba(47,128,237,.16),transparent 35%),
+    var(--bg);
+}
+
+.auth-box{
+  width:100%;
+  max-width:390px;
+  padding:34px 24px 26px;
+  border:1px solid var(--line);
+  border-radius:32px;
+  background:rgba(18,20,26,.86);
+  backdrop-filter:blur(30px);
+  -webkit-backdrop-filter:blur(30px);
+  box-shadow:var(--shadow);
+  text-align:center;
+  animation:appear .45s ease;
+}
+
+.auth-logo{
+  width:82px;
+  height:82px;
+  margin:0 auto 20px;
+  display:grid;
+  place-items:center;
+  border-radius:27px;
+  font-size:37px;
+  background:
+    linear-gradient(145deg,#3983ff,#1748aa);
+  box-shadow:
+    0 18px 45px rgba(47,128,237,.28),
+    inset 0 1px rgba(255,255,255,.25);
+}
+
+.auth-box h2{
+  margin:0;
+  font-size:24px;
+  font-weight:900;
+  letter-spacing:.5px;
+}
+
+.auth-sub{
+  margin:8px 0 27px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.field{
+  margin-bottom:13px;
+  text-align:right;
+}
+
+.field label{
+  display:block;
+  margin:0 4px 7px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.field input{
+  width:100%;
+  height:54px;
+  padding:0 16px;
+  border:1px solid var(--line);
+  border-radius:17px;
+  outline:none;
+  color:#fff;
+  background:#0e1015;
+  transition:.2s;
+}
+
+.field input:focus{
+  border-color:rgba(77,141,255,.8);
+  box-shadow:0 0 0 4px rgba(77,141,255,.1);
+}
+
+.btn{
+  width:100%;
+  min-height:53px;
+  border:0;
+  border-radius:17px;
+  color:#fff;
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  font-size:15px;
+  font-weight:800;
+  box-shadow:0 12px 30px rgba(47,128,237,.18);
+  transition:.18s;
+}
+
+.btn:active{
+  transform:scale(.975);
+}
+
+.btn.ghost{
+  color:var(--blue);
+  background:rgba(77,141,255,.07);
+  border:1px solid rgba(77,141,255,.25);
+  box-shadow:none;
+}
+
+/* =========================
+   APP
+========================= */
+
+#app{
+  display:none;
+  width:100%;
+  max-width:520px;
+  min-height:100vh;
+  margin:auto;
+  padding:18px 16px calc(105px + env(safe-area-inset-bottom));
+  position:relative;
+}
+
+.view{
+  display:none;
+  animation:viewIn .28s ease;
+}
+
+.view.active{
+  display:block;
+}
+
+@keyframes viewIn{
+  from{
+    opacity:0;
+    transform:translateY(8px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+@keyframes appear{
+  from{
+    opacity:0;
+    transform:translateY(18px) scale(.98);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:23px;
+}
+
+.profile{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.avatar{
+  width:43px;
+  height:43px;
+  border-radius:15px;
+  display:grid;
+  place-items:center;
+  font-size:20px;
+  background:
+    linear-gradient(145deg,#222b3b,#11151e);
+  border:1px solid var(--line);
+}
+
+.welcome{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.username{
+  margin-top:2px;
+  font-size:15px;
+  font-weight:800;
+}
+
+.top-actions{
+  display:flex;
+  gap:8px;
+}
+
+.icon-btn{
+  width:42px;
+  height:42px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  color:#fff;
+  background:rgba(25,28,35,.8);
+  font-size:18px;
+  transition:.18s;
+}
+
+.icon-btn:active{
+  transform:scale(.92);
+}
+
+/* =========================
+   BALANCE CARD
+========================= */
+
+.balance-card{
+  position:relative;
+  min-height:225px;
+  overflow:hidden;
+  padding:25px;
+  margin-bottom:25px;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:31px;
+  background:
+    radial-gradient(circle at 85% 0%,rgba(65,137,255,.25),transparent 35%),
+    radial-gradient(circle at 0% 100%,rgba(44,89,190,.18),transparent 35%),
+    linear-gradient(145deg,#1a1e27,#0f1116 75%);
+  box-shadow:var(--shadow);
+}
+
+.balance-card::before{
+  content:"";
+  position:absolute;
+  width:230px;
+  height:230px;
+  left:-100px;
+  bottom:-130px;
+  border-radius:50%;
+  background:rgba(48,128,255,.17);
+  filter:blur(40px);
+}
+
+.balance-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    120deg,
+    transparent 35%,
+    rgba(255,255,255,.035) 50%,
+    transparent 65%
+  );
+  pointer-events:none;
+}
+
+.balance-top{
+  position:relative;
+  z-index:2;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.balance-label{
+  color:#9da4b1;
+  font-size:12px;
+}
+
+.wallet-status{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 9px;
+  border-radius:20px;
+  color:#81e6aa;
+  background:rgba(53,208,127,.08);
+  font-size:10px;
+}
+
+.status-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 10px var(--green);
+}
+
+.balance-number{
+  position:relative;
+  z-index:2;
+  margin-top:27px;
+  direction:ltr;
+  font-family:var(--en);
+  font-size:42px;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:-1px;
+}
+
+.balance-number small{
+  margin-left:7px;
+  color:var(--blue);
+  font-size:19px;
+}
+
+.balance-toman{
+  position:relative;
+  z-index:2;
+  margin-top:12px;
+  color:#9299a6;
+  font-size:12px;
+}
+
+.balance-bottom{
+  position:absolute;
+  left:25px;
+  right:25px;
+  bottom:21px;
+  z-index:3;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.wallet-address{
+  direction:ltr;
+  color:#767e8d;
+  font-family:var(--en);
+  font-size:9px;
+}
+
+.card-chip{
+  width:32px;
+  height:22px;
+  border-radius:6px;
+  background:linear-gradient(135deg,#f0c969,#7c5e20);
+  opacity:.8;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.action-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-bottom:28px;
+}
+
+.action{
+  min-height:76px;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:23px;
+  background:rgba(22,25,31,.75);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:#fff;
+  transition:.18s;
+}
+
+.action:active{
+  transform:scale(.97);
+}
+
+.action-icon{
+  width:50px;
+  height:50px;
+  border-radius:17px;
+  display:grid;
+  place-items:center;
+  font-size:22px;
+  flex:none;
+}
+
+.action.buy .action-icon{
+  background:rgba(53,208,127,.11);
+  color:var(--green);
+}
+
+.action.sell .action-icon{
+  background:rgba(255,92,108,.1);
+  color:var(--red);
+}
+
+.action strong{
+  display:block;
+  font-size:14px;
+}
+
+.action span{
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:10px;
+}
+
+/* =========================
+   SECTION
+========================= */
+
+.section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:0 3px 13px;
+}
+
+.section-head h3{
+  margin:0;
+  font-size:15px;
+}
+
+.section-head span{
+  color:var(--muted);
+  font-size:11px;
+}
+
+/* =========================
+   ASSET
+========================= */
+
+.asset-card{
+  display:flex;
+  align-items:center;
+  padding:15px;
+  margin-bottom:10px;
+  border:1px solid var(--line);
+  border-radius:21px;
+  background:rgba(20,23,29,.78);
+}
+
+.asset-icon{
+  width:47px;
+  height:47px;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  font-size:21px;
+  margin-left:12px;
+}
+
+.asset-icon.blue{
+  background:rgba(77,141,255,.12);
+}
+
+.asset-icon.gold{
+  background:rgba(244,201,93,.1);
+}
+
+.asset-icon.red{
+  background:rgba(255,92,108,.1);
+}
+
+.asset-main{
+  flex:1;
+}
+
+.asset-name{
+  font-size:13px;
+  font-weight:800;
+}
+
+.asset-desc{
+  color:var(--muted);
+  margin-top:4px;
+  font-size:10px;
+}
+
+.asset-value{
+  text-align:left;
+}
+
+.asset-value b{
+  display:block;
+  font-family:var(--en);
+  font-size:12px;
+}
+
+.asset-value small{
+  display:block;
+  color:var(--muted);
+  margin-top:4px;
+  font-size:9px;
+}
+
+/* =========================
+   SERVICES
+========================= */
+
+.service-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.service{
+  padding:16px 8px;
+  min-height:105px;
+  border:1px solid var(--line);
+  border-radius:21px;
+  background:rgba(20,23,29,.78);
+  text-decoration:none;
+  color:#fff;
+  text-align:center;
+  transition:.18s;
+}
+
+.service:active{
+  transform:scale(.96);
+}
+
+.service-icon{
+  width:43px;
+  height:43px;
+  margin:0 auto 9px;
+  display:grid;
+  place-items:center;
+  border-radius:14px;
+  font-size:21px;
+}
+
+.service:nth-child(1) .service-icon{
+  background:rgba(244,201,93,.1);
+}
+
+.service:nth-child(2) .service-icon{
+  background:rgba(255,92,108,.1);
+}
+
+.service:nth-child(3) .service-icon{
+  background:rgba(77,141,255,.1);
+}
+
+.service b{
+  display:block;
+  font-size:11px;
+}
+
+.service small{
+  display:block;
+  color:var(--muted);
+  font-size:8px;
+  margin-top:4px;
+}
+
+/* =========================
+   BUY / SELL
+========================= */
+
+.page-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:5px 2px 20px;
+}
+
+.back{
+  width:40px;
+  height:40px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:var(--card2);
+  color:#fff;
+  font-size:18px;
+}
+
+.page-title h2{
+  margin:0;
+  font-size:20px;
+}
+
+.form-card{
+  padding:20px;
+  border:1px solid var(--line);
+  border-radius:28px;
+  background:rgba(20,23,29,.82);
+  box-shadow:var(--shadow);
+}
+
+.pay-card{
+  position:relative;
+  padding:20px;
+  margin-bottom:18px;
+  border:1px dashed rgba(77,141,255,.4);
+  border-radius:20px;
+  text-align:center;
+  background:rgba(77,141,255,.045);
+}
+
+.pay-card-label{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.card-number{
+  direction:ltr;
+  margin:11px 0;
+  font-family:var(--en);
+  font-size:17px;
+  letter-spacing:1px;
+}
+
+.card-owner{
+  color:#aeb4bf;
+  font-size:11px;
+}
+
+.input-wrap{
+  position:relative;
+}
+
+.input-wrap input{
+  padding-left:58px;
+}
+
+.input-suffix{
+  position:absolute;
+  left:15px;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--blue);
+  font-family:var(--en);
+  font-size:11px;
+}
+
+.summary{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px;
+  margin:12px 0 16px;
+  border-radius:17px;
+  background:#0d0f14;
+  border:1px solid var(--line);
+}
+
+.summary span:first-child{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.summary span:last-child{
+  font-family:var(--en);
+  font-size:12px;
+}
+
+/* =========================
+   BOTTOM NAV
+========================= */
+
+.bottom-nav{
+  position:fixed;
+  z-index:500;
+  bottom:12px;
+  left:50%;
+  width:calc(100% - 24px);
+  max-width:496px;
+  transform:translateX(-50%);
+  display:flex;
+  justify-content:space-around;
+  padding:9px 7px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:25px;
+  background:rgba(18,21,27,.88);
+  backdrop-filter:blur(25px);
+  -webkit-backdrop-filter:blur(25px);
+  box-shadow:0 15px 50px rgba(0,0,0,.5);
+}
+
+.nav-btn{
+  position:relative;
+  min-width:76px;
+  padding:6px 8px;
+  border:0;
+  border-radius:17px;
+  color:#707785;
+  background:transparent;
+  font-size:9px;
+  font-weight:700;
+}
+
+.nav-icon{
+  display:grid;
+  place-items:center;
+  width:30px;
+  height:25px;
+  margin:auto;
+  font-size:19px;
+}
+
+.nav-btn.active{
+  color:#fff;
+  background:rgba(77,141,255,.12);
+}
+
+.nav-btn.active .nav-icon{
+  color:var(--blue);
+}
+
+/* =========================
+   MODALS
+========================= */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  z-index:2000;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  padding:15px;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(8px);
+}
+
+.overlay.show{
+  display:flex;
+}
+
+.modal{
+  width:100%;
+  max-width:500px;
+  padding:25px 20px calc(20px + env(safe-area-inset-bottom));
+  border:1px solid var(--line);
+  border-radius:30px 30px 22px 22px;
+  background:#171a21;
+  box-shadow:0 -20px 70px rgba(0,0,0,.45);
+  text-align:center;
+  animation:sheet .3s ease;
+}
+
+@keyframes sheet{
+  from{
+    opacity:0;
+    transform:translateY(40px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+.modal h3{
+  margin:0 0 15px;
+  font-size:19px;
+}
+
+.modal p{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.9;
+}
+
+.kv{
+  display:flex;
+  justify-content:space-between;
+  padding:13px;
+  margin-bottom:8px;
+  border-radius:13px;
+  background:#0e1015;
+  font-size:12px;
+}
+
+.order-id{
+  display:inline-block;
+  margin:8px 0 14px;
+  padding:11px 18px;
+  border:1px dashed var(--blue);
+  border-radius:13px;
+  color:var(--blue);
+  background:rgba(77,141,255,.06);
+  font-family:var(--en);
+  font-size:13px;
+}
+
+.tg-btn{
+  display:inline-block;
+  padding:11px 18px;
+  margin-bottom:14px;
+  border-radius:13px;
+  color:#fff;
+  background:#239bd4;
+  font-family:var(--en);
+  font-size:13px;
+}
+
+/* =========================
+   ADMIN
+========================= */
+
+#adminPanel{
+  position:fixed;
+  inset:0;
+  z-index:3000;
+  display:none;
+  overflow-y:auto;
+  padding:25px 16px;
+  background:var(--bg);
+}
+
+.admin-wrap{
+  width:100%;
+  max-width:500px;
+  margin:auto;
+}
+
+.admin-title{
+  margin:0 0 20px;
+  text-align:center;
+  font-size:22px;
+  color:var(--blue);
+}
+
+.admin-order{
+  padding:17px;
+  margin-bottom:10px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:var(--card2);
+}
+
+.line{
+  display:flex;
+  justify-content:space-between;
+  padding:9px 0;
+  border-bottom:1px solid var(--line);
+  font-size:12px;
+}
+
+.line:last-of-type{
+  border-bottom:0;
+}
+
+.acts{
+  display:flex;
+  gap:8px;
+  margin-top:13px;
+}
+
+.acts .btn{
+  min-height:45px;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast{
+  position:fixed;
+  z-index:5000;
+  top:20px;
+  left:50%;
+  width:max-content;
+  max-width:90%;
+  padding:12px 18px;
+  border:1px solid rgba(77,141,255,.35);
+  border-radius:14px;
+  color:#fff;
+  background:#181b22;
+  box-shadow:0 15px 40px rgba(0,0,0,.4);
+  transform:translate(-50%,-20px);
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  font-size:12px;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+@media(max-width:360px){
+  .balance-number{
+    font-size:35px;
+  }
+
+  .service-grid{
+    gap:7px;
+  }
+
+  .nav-btn{
+    min-width:65px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= AUTH ================= -->
+
+<div id="authScreen">
+
+  <div class="auth-box">
+
+    <div class="auth-logo">🍀</div>
+
+    <h2>LUCKY SPIN WALLET</h2>
+
+    <div class="auth-sub">
+      کیف پول دیجیتال شما
+    </div>
+
+    <div class="field">
+      <label>نام کاربری</label>
+      <input
+        type="text"
+        id="authUser"
+        placeholder="username"
+        maxlength="24"
+        autocomplete="username">
+    </div>
+
+    <div class="field">
+      <label>رمز عبور</label>
+      <input
+        type="password"
+        id="authPass"
+        placeholder="حداقل ۶ کاراکتر"
+        autocomplete="current-password">
+    </div>
+
+    <button class="btn" id="btnLogin">
+      ورود به کیف پول
+    </button>
+
+    <button class="btn ghost" id="btnRegister" style="margin-top:10px">
+      ساخت حساب + ۵۰ توکن هدیه
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ================= APP ================= -->
+
+<div id="app">
+
+  <!-- TOP BAR -->
+
+  <div class="topbar">
+
+    <div class="profile">
+
+      <div class="avatar">🍀</div>
+
+      <div>
+        <div class="welcome">خوش آمدید</div>
+        <div class="username" id="helloUser">—</div>
+      </div>
+
+    </div>
+
+    <div class="top-actions">
+
+      <button class="icon-btn" id="btnAdmin">⚙</button>
+
+      <button class="icon-btn" id="btnLogout">⏻</button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================= HOME ================= -->
+
+  <section class="view active" id="view-home">
+
+    <!-- BALANCE -->
+
+    <div class="balance-card">
+
+      <div class="balance-top">
+
+        <div class="balance-label">
+          موجودی کیف پول
+        </div>
+
+        <div class="wallet-status">
+          <span class="status-dot"></span>
+          فعال
+        </div>
+
+      </div>
+
+      <div class="balance-number">
+        <span id="balAmount">0</span>
+        <small>T</small>
+      </div>
+
+      <div class="balance-toman">
+        ≈ <span class="num" id="balToman">0</span> تومان
+      </div>
+
+      <div class="balance-bottom">
+
+        <div class="wallet-address">
+          LUCKY SPIN • WALLET
+        </div>
+
+        <div class="card-chip"></div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ACTIONS -->
+
+    <div class="action-grid">
+
+      <button class="action buy" onclick="go('buy')">
+
+        <div class="action-icon">
+          ↗
+        </div>
+
+        <div>
+          <strong>خرید</strong>
+          <span>افزایش موجودی</span>
+        </div>
+
+      </button>
+
+
+      <button class="action sell" onclick="go('sell')">
+
+        <div class="action-icon">
+          ↙
+        </div>
+
+        <div>
+          <strong>فروش</strong>
+          <span>برداشت وجه</span>
+        </div>
+
+      </button>
+
+    </div>
+
+
+    <!-- ASSET -->
+
+    <div class="section-head">
+      <h3>دارایی‌ها</h3>
+      <span>My Assets</span>
+    </div>
+
+    <div class="asset-card">
+
+      <div class="asset-icon blue">
+        💎
+      </div>
+
+      <div class="asset-main">
+
+        <div class="asset-name">
+          Lucky Token
+        </div>
+
+        <div class="asset-desc">
+          دارایی اصلی کیف پول
+        </div>
+
+      </div>
+
+      <div class="asset-value">
+
+        <b id="assetTokens">0 T</b>
+
+        <small id="assetToman">0 تومان</small>
+
+      </div>
+
+    </div>
+
+
+    <!-- SERVICES -->
+
+    <div class="section-head" style="margin-top:27px">
+      <h3>بازی‌ها و سرگرمی</h3>
+      <span>Services</span>
+    </div>
+
+    <div class="service-grid">
+
+      <a href="wheel.html" class="service">
+
+        <div class="service-icon">🎡</div>
+
+        <b>گردونه</b>
+
+        <small>شانس خود را امتحان کنید</small>
+
+      </a>
+
+
+      <a href="mines.html" class="service">
+
+        <div class="service-icon">💣</div>
+
+        <b>انفجار</b>
+
+        <small>الماس پیدا کنید</small>
+
+      </a>
+
+
+      <a href="plinko.html" class="service">
+
+        <div class="service-icon">🟢</div>
+
+        <b>پلینکو</b>
+
+        <small>توپ را پرتاب کنید</small>
+
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= BUY ================= -->
+
+  <section class="view" id="view-buy">
+
+    <div class="page-title">
+
+      <button class="back" onclick="go('home')">→</button>
+
+      <h2>خرید توکن</h2>
+
+    </div>
+
+    <div class="form-card">
+
+      <div class="pay-card" id="payCard">
+
+        <div class="pay-card-label">
+          شماره کارت پرداخت
+        </div>
+
+        <div class="card-number">
+          6219-8619-7555-0053
+        </div>
+
+        <div class="card-owner">
+          به نام کیانی • برای کپی لمس کنید
+        </div>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>تعداد توکن</label>
+
+        <div class="input-wrap">
+
+          <input
+            type="text"
+            inputmode="numeric"
+            id="buyAmount"
+            value="100">
+
+          <span class="input-suffix">TOKEN</span>
+
+        </div>
+
+      </div>
+
+
+      <div class="summary">
+
+        <span>مبلغ پرداختی</span>
+
+        <span id="buyPrice">
+          100,000 تومان
+        </span>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>کد رهگیری پرداخت</label>
+
+        <input
+          type="text"
+          id="buyTracking"
+          placeholder="مثلاً 123456789">
+
+      </div>
+
+
+      <button class="btn" id="btnBuy">
+        ثبت سفارش خرید
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= SELL ================= -->
+
+  <section class="view" id="view-sell">
+
+    <div class="page-title">
+
+      <button class="back" onclick="go('home')">→</button>
+
+      <h2>فروش توکن</h2>
+
+    </div>
+
+
+    <div class="form-card">
+
+      <div class="field">
+
+        <label>شماره کارت مقصد</label>
+
+        <input
+          type="text"
+          inputmode="numeric"
+          id="sellCard"
+          maxlength="19"
+          placeholder="XXXX-XXXX-XXXX-XXXX">
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          تعداد توکن
+          <span style="color:var(--blue)">
+            • موجودی:
+            <span class="num" id="sellBal">0</span>
+          </span>
+        </label>
+
+        <div class="input-wrap">
+
+          <input
+            type="text"
+            inputmode="numeric"
+            id="sellAmount"
+            placeholder="0">
+
+          <span class="input-suffix">TOKEN</span>
+
+        </div>
+
+      </div>
+
+
+      <div class="summary">
+
+        <span>مبلغ دریافتی</span>
+
+        <span id="sellReceive">
+          0 تومان
+        </span>
+
+      </div>
+
+
+      <button
+        class="btn"
+        style="background:linear-gradient(135deg,#ff5c6c,#d9364d)"
+        id="btnSell">
+
+        ثبت درخواست فروش
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= BOTTOM NAV ================= -->
+
+  <nav class="bottom-nav">
+
+    <button
+      class="nav-btn active"
+      data-go="home">
+
+      <div class="nav-icon">⌂</div>
+      کیف پول
+
+    </button>
+
+
+    <button
+      class="nav-btn"
+      data-go="buy">
+
+      <div class="nav-icon">↗</div>
+      خرید
+
+    </button>
+
+
+    <button
+      class="nav-btn"
+      data-go="sell">
+
+      <div class="nav-icon">↙</div>
+      فروش
+
+    </button>
+
+  </nav>
+
+</div>
+
+
+<!-- ================= MODAL ================= -->
+
+<div class="overlay" id="msgOverlay">
+
+  <div class="modal" id="msgModal"></div>
+
+</div>
+
+
+<!-- ADMIN LOGIN -->
+
+<div class="overlay" id="adminLoginOverlay">
+
+  <div class="modal">
+
+    <h3>ورود مدیریت</h3>
+
+    <p>
+      رمز مدیریت را وارد کنید.
+    </p>
+
+    <div class="field">
+
+      <input
+        type="password"
+        id="adminPassInput"
+        placeholder="رمز ادمین">
+
+    </div>
+
+    <button class="btn" id="adminLoginOk">
+      ورود
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ADMIN PANEL -->
+
+<div id="adminPanel">
+
+  <div class="admin-wrap">
+
+    <h2 class="admin-title">
+      پنل مدیریت
+    </h2>
+
+    <div id="adminOrders"></div>
+
+    <button
+      class="btn"
+      style="background:#1a1d24;margin-top:15px"
+      id="adminClose">
+
+      بستن پنل
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+"use strict";
+
+/* =========================
+   CONFIG - LUCKY SPIN
+========================= */
+
+// تغییر کلیدها به Lucky Spin برای جلوگیری از تداخل با ربات‌های قبلی
+var STORAGE_KEY = "lucky_spin_exchange_v1";
+var SESSION_KEY = "lucky_spin_session";
+var DEVICE_KEY = "lucky_spin_device";
+
+var ADMIN_HASH =
+"91a6dba7d8f88cd70d4a1c5db0098d76f2a99257bc9d8524494bb1cd32b0fbd6";
+
+var TOKEN_PRICE = 1000;
+
+var CARD_NUMBER = "6219861975550053";
+
+var BUY_ADMIN_ID = "@mahancn3";
+
+var SELL_ADMIN_ID = "@sobhan_1384_k";
+
+var WELCOME_TOKENS = 50;
+
+var db = {
+  users:{}
+};
+
+var currentUser = null;
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+function esc(s){
+  return String(s).replace(
+    /[&<>"']/g,
+    function(c){
+      return {
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#39;"
+      }[c];
+    }
+  );
+}
+
+function fmt(n){
+  return Number(n || 0).toLocaleString("en-US");
+}
+
+function digitsOnly(s){
+
+  return String(s)
+    .replace(/[۰-۹]/g,function(d){
+      return "۰۱۲۳۴۵۶۷۸۹".indexOf(d);
+    })
+    .replace(/\D/g,"");
+
+}
+
+function makeId(prefix){
+
+  return prefix +
+    "-" +
+    Date.now().toString(36).toUpperCase().slice(-5) +
+    Math.random().toString(36).slice(2,5).toUpperCase();
+
+}
+
+function toast(msg,isErr){
+
+  var t = $("toast");
+
+  t.textContent = msg;
+
+  t.className = "toast show";
+
+  if(isErr){
+    t.style.borderColor = "rgba(255,92,108,.5)";
+  }else{
+    t.style.borderColor = "rgba(77,141,255,.35)";
+  }
+
+  setTimeout(function(){
+    t.className = "toast";
+  },2800);
+
+}
+
+
+/* =========================
+   HASH
+========================= */
+
+async function sha256(text){
+
+  if(window.crypto && crypto.subtle){
+
+    var buf =
+      await crypto.subtle.digest(
+        "SHA-256",
+        new TextEncoder().encode(text)
+      );
+
+    return Array.prototype.map.call(
+      new Uint8Array(buf),
+      function(x){
+        return x.toString(16).padStart(2,"0");
+      }
+    ).join("");
+
+  }
+
+  return "plain:" + text;
+}
+
+
+/* =========================
+   DATABASE
+========================= */
+
+function loadDB(){
+
+  try{
+
+    var s = localStorage.getItem(STORAGE_KEY);
+
+    if(s){
+      db = JSON.parse(s);
+    }
+
+  }catch(e){}
+
+  if(!db.users){
+    db.users = {};
+  }
+
+}
+
+function saveDB(){
+
+  try{
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(db)
+    );
+  }catch(e){}
+
+}
+
+function me(){
+
+  return currentUser
+    ? db.users[currentUser]
+    : null;
+
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+async function doLogin(){
+
+  var u =
+    $("authUser").value
+      .trim()
+      .toLowerCase();
+
+  var p =
+    $("authPass").value;
+
+  if(!u || !p){
+    return toast(
+      "نام کاربری و رمز را وارد کنید.",
+      true
+    );
+  }
+
+  var rec = db.users[u];
+
+  if(!rec){
+    return toast(
+      "این حساب پیدا نشد.",
+      true
+    );
+  }
+
+  var h =
+    await sha256(
+      rec.salt + p
+    );
+
+  if(h !== rec.hash){
+
+    return toast(
+      "رمز عبور اشتباه است.",
+      true
+    );
+
+  }
+
+  startSession(u);
+
+}
+
+
+/* =========================
+   REGISTER
+========================= */
+
+async function doRegister(){
+
+  var u =
+    $("authUser").value
+      .trim()
+      .toLowerCase();
+
+  var p =
+    $("authPass").value;
+
+  if(!/^[a-z0-9_]{3,24}$/.test(u)){
+
+    return toast(
+      "نام کاربری باید ۳ تا ۲۴ کاراکتر انگلیسی باشد.",
+      true
+    );
+
+  }
+
+  if(p.length < 6){
+
+    return toast(
+      "رمز عبور حداقل ۶ کاراکتر باشد.",
+      true
+    );
+
+  }
+
+  if(db.users[u]){
+
+    return toast(
+      "این نام کاربری قبلاً گرفته شده.",
+      true
+    );
+
+  }
+
+  if(localStorage.getItem(DEVICE_KEY)){
+
+    return toast(
+      "با این دستگاه قبلاً حساب ساخته شده است.",
+      true
+    );
+
+  }
+
+  var salt =
+    Math.random().toString(36).slice(2) +
+    Date.now().toString(36);
+
+  db.users[u] = {
+
+    salt:salt,
+
+    hash:
+      await sha256(salt + p),
+
+    tokens:WELCOME_TOKENS,
+
+    history:[]
+
+  };
+
+  db.users[u].history.push({
+
+    id:makeId("GF"),
+
+    type:"buy",
+
+    tokens:WELCOME_TOKENS,
+
+    amount:0,
+
+    status:"approved",
+
+    ts:Date.now(),
+
+    note:"هدیه ثبت‌نام"
+
+  });
+
+  try{
+    localStorage.setItem(
+      DEVICE_KEY,
+      u
+    );
+  }catch(e){}
+
+  saveDB();
+
+  startSession(u);
+
+  toast(
+    "حساب ساخته شد! ۵۰ توکن هدیه دریافت کردید 🎁"
+  );
+
+}
+
+
+/* =========================
+   SESSION
+========================= */
+
+function startSession(u){
+
+  currentUser = u;
+
+  try{
+    localStorage.setItem(
+      SESSION_KEY,
+      u
+    );
+  }catch(e){}
+
+  $("authScreen").style.display = "none";
+
+  $("app").style.display = "block";
+
+  $("authPass").value = "";
+
+  go("home");
+
+  renderAll();
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+function logout(){
+
+  currentUser = null;
+
+  try{
+    localStorage.removeItem(
+      SESSION_KEY
+    );
+  }catch(e){}
+
+  $("app").style.display = "none";
+
+  $("authScreen").style.display = "flex";
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function go(view){
+
+  document
+    .querySelectorAll(".view")
+    .forEach(function(v){
+      v.classList.remove("active");
+    });
+
+  $("view-" + view)
+    .classList.add("active");
+
+  document
+    .querySelectorAll(".nav-btn")
+    .forEach(function(b){
+      b.classList.toggle(
+        "active",
+        b.dataset.go === view
+      );
+    });
+
+  if(view === "sell"){
+
+    $("sellBal").textContent =
+      fmt(
+        me()
+          ? me().tokens
+          : 0
+      );
+
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function renderAll(){
+
+  var u = me();
+
+  if(!u) return;
+
+  $("helloUser").textContent =
+    currentUser;
+
+  $("balAmount").textContent =
+    fmt(u.tokens);
+
+  $("balToman").textContent =
+    fmt(
+      u.tokens *
+      TOKEN_PRICE
+    );
+
+  $("sellBal").textContent =
+    fmt(u.tokens);
+
+  $("assetTokens").textContent =
+    fmt(u.tokens) + " T";
+
+  $("assetToman").textContent =
+    fmt(
+      u.tokens *
+      TOKEN_PRICE
+    ) + " تومان";
+
+}
+
+
+/* =========================
+   MODAL
+========================= */
+
+function showModal(html){
+
+  $("msgModal").innerHTML = html;
+
+  $("msgOverlay")
+    .classList.add("show");
+
+}
+
+function closeModal(){
+
+  $("msgOverlay")
+    .classList.remove("show");
+
+}
+
+
+/* =========================
+   BUY PRICE
+========================= */
+
+function updateBuyPrice(){
+
+  var v =
+    digitsOnly(
+      $("buyAmount").value
+    );
+
+  $("buyAmount").value = v;
+
+  $("buyPrice").textContent =
+    fmt(
+      Number(v || 0) *
+      TOKEN_PRICE
+    ) + " تومان";
+
+}
+
+
+/* =========================
+   SELL PRICE
+========================= */
+
+function updateSellPrice(){
+
+  var v =
+    digitsOnly(
+      $("sellAmount").value
+    );
+
+  $("sellAmount").value = v;
+
+  $("sellReceive").textContent =
+    fmt(
+      Number(v || 0) *
+      TOKEN_PRICE
+    ) + " تومان";
+
+}
+
+
+/* =========================
+   BUY
+========================= */
+
+function submitBuy(){
+
+  var u = me();
+
+  if(!u) return;
+
+  var amt =
+    Number(
+      digitsOnly(
+        $("buyAmount").value
+      )
+    );
+
+  var trk =
+    $("buyTracking").value.trim();
+
+  if(!amt || amt < 1){
+
+    return toast(
+      "تعداد توکن نامعتبر است.",
+      true
+    );
+
+  }
+
+  if(trk.length < 4){
+
+    return toast(
+      "کد رهگیری را وارد کنید.",
+      true
+    );
+
+  }
+
+  var order = {
+
+    id:makeId("P"),
+
+    type:"buy",
+
+    tokens:amt,
+
+    amount:
+      amt * TOKEN_PRICE,
+
+    tracking:trk,
+
+    status:"pending",
+
+    ts:Date.now()
+
+  };
+
+  u.history.push(order);
+
+  saveDB();
+
+  renderAll();
+
+  $("buyTracking").value = "";
+
+  showModal(
+
+    '<div style="font-size:48px">✓</div>' +
+
+    '<h3>سفارش خرید ثبت شد</h3>' +
+
+    '<div class="kv">' +
+      '<span>تعداد</span>' +
+      '<span class="num">' +
+        fmt(amt) +
+        ' T</span>' +
+    '</div>' +
+
+    '<div class="kv">' +
+      '<span>مبلغ</span>' +
+      '<span>' +
+        fmt(order.amount) +
+        ' تومان</span>' +
+    '</div>' +
+
+    '<p>شناسه سفارش:</p>' +
+
+    '<div class="order-id" data-copy="' +
+      esc(order.id) +
+    '">' +
+      esc(order.id) +
+    '</div>' +
+
+    '<p style="color:var(--red);font-weight:700">' +
+      'رسید پرداخت را برای ادمین ارسال کنید.' +
+    '</p>' +
+
+    '<div class="tg-btn" data-copy="' +
+      esc(BUY_ADMIN_ID) +
+    '">' +
+      esc(BUY_ADMIN_ID) +
+    '</div>' +
+
+    '<button class="btn" data-close="1">' +
+      'متوجه شدم' +
+    '</button>'
+
+  );
+
+}
+
+
+/* =========================
+   SELL
+========================= */
+
+function submitSell(){
+
+  var u = me();
+
+  if(!u) return;
+
+  var card =
+    digitsOnly(
+      $("sellCard").value
+    );
+
+  var amt =
+    Number(
+      digitsOnly(
+        $("sellAmount").value
+      )
+    );
+
+  if(card.length !== 16){
+
+    return toast(
+      "شماره کارت نامعتبر است.",
+      true
+    );
+
+  }
+
+  if(!amt || amt < 1){
+
+    return toast(
+      "تعداد توکن را وارد کنید.",
+      true
+    );
+
+  }
+
+  if(amt > u.tokens){
+
+    return toast(
+      "موجودی کافی نیست.",
+      true
+    );
+
+  }
+
+  u.tokens -= amt;
+
+  var order = {
+
+    id:makeId("WD"),
+
+    type:"sell",
+
+    tokens:amt,
+
+    amount:
+      amt * TOKEN_PRICE,
+
+    card:card,
+
+    status:"pending",
+
+    ts:Date.now()
+
+  };
+
+  u.history.push(order);
+
+  saveDB();
+
+  renderAll();
+
+  $("sellCard").value = "";
+
+  $("sellAmount").value = "";
+
+  $("sellReceive").textContent =
+    "0 تومان";
+
+  showModal(
+
+    '<div style="font-size:48px">⏳</div>' +
+
+    '<h3>درخواست فروش ثبت شد</h3>' +
+
+    '<div class="kv">' +
+      '<span>تعداد</span>' +
+      '<span class="num">' +
+        fmt(amt) +
+        ' T</span>' +
+    '</div>' +
+
+    '<div class="kv">' +
+      '<span>مبلغ</span>' +
+      '<span>' +
+        fmt(order.amount) +
+        ' تومان</span>' +
+    '</div>' +
+
+    '<p>شناسه سفارش:</p>' +
+
+    '<div class="order-id" data-copy="' +
+      esc(order.id) +
+    '">' +
+      esc(order.id) +
+    '</div>' +
+
+    '<div class="tg-btn" data-copy="' +
+      esc(SELL_ADMIN_ID) +
+    '">' +
+      esc(SELL_ADMIN_ID) +
+    '</div>' +
+
+    '<button class="btn" data-close="1">' +
+      'متوجه شدم' +
+    '</button>'
+
+  );
+
+}
+
+
+/* =========================
+   CARD FORMAT
+========================= */
+
+function formatCard(){
+
+  var input = $("sellCard");
+
+  var value =
+    digitsOnly(input.value)
+      .slice(0,16);
+
+  var parts = [];
+
+  for(
+    var i=0;
+    i<value.length;
+    i+=4
+  ){
+    parts.push(
+      value.slice(i,i+4)
+    );
+  }
+
+  input.value =
+    parts.join("-");
+
+}
+
+
+/* =========================
+   EVENTS
+========================= */
+
+function bind(){
+
+  $("btnLogin")
+    .addEventListener(
+      "click",
+      doLogin
+    );
+
+  $("btnRegister")
+    .addEventListener(
+      "click",
+      doRegister
+    );
+
+  $("btnLogout")
+    .addEventListener(
+      "click",
+      logout
+    );
+
+
+  $("payCard")
+    .addEventListener(
+      "click",
+      function(){
+
+        navigator.clipboard
+          .writeText(CARD_NUMBER)
+          .then(function(){
+
+            toast("شماره کارت کپی شد ✓");
+
+          });
+
+      }
+    );
+
+
+  $("buyAmount")
+    .addEventListener(
+      "input",
+      updateBuyPrice
+    );
+
+
+  $("btnBuy")
+    .addEventListener(
+      "click",
+      submitBuy
+    );
+
+
+  $("sellAmount")
+    .addEventListener(
+      "input",
+      updateSellPrice
+    );
+
+
+  $("sellCard")
+    .addEventListener(
+      "input",
+      formatCard
+    );
+
+
+  $("btnSell")
+    .addEventListener(
+      "click",
+      submitSell
+    );
+
+
+  document.addEventListener(
+    "click",
+    function(e){
+
+      var goBtn =
+        e.target.closest("[data-go]");
+
+      if(goBtn){
+
+        return go(
+          goBtn.dataset.go
+        );
+
+      }
+
+
+      var cp =
+        e.target.closest("[data-copy]");
+
+      if(cp){
+
+        return navigator.clipboard
+          .writeText(
+            cp.dataset.copy
+          )
+          .then(function(){
+
+            toast("کپی شد ✓");
+
+          });
+
+      }
+
+
+      if(
+        e.target.closest("[data-close]")
+      ){
+
+        return closeModal();
+
+      }
+
+    }
+  );
+
+
+  $("msgOverlay")
+    .addEventListener(
+      "click",
+      function(e){
+
+        if(e.target === this){
+          closeModal();
+        }
+
+      }
+    );
+
+
+  $("btnAdmin")
+    .addEventListener(
+      "click",
+      function(){
+
+        $("adminLoginOverlay")
+          .classList.add("show");
+
+      }
+    );
+
+
+  $("adminLoginOk")
+    .addEventListener(
+      "click",
+      async function(){
+
+        var ok =
+          await sha256(
+            $("adminPassInput").value
+          ) === ADMIN_HASH;
+
+        if(ok){
+
+          $("adminLoginOverlay")
+            .classList.remove("show");
+
+          $("adminPanel").style.display =
+            "block";
+
+          renderAdmin();
+
+        }else{
+
+          toast(
+            "رمز اشتباه است.",
+            true
+          );
+
+        }
+
+      }
+    );
+
+
+  $("adminClose")
+    .addEventListener(
+      "click",
+      function(){
+
+        $("adminPanel").style.display =
+          "none";
+
+      }
+    );
+
+}
+
+
+/* =========================
+   ADMIN
+========================= */
+
+function renderAdmin(){
+
+  var box =
+    $("adminOrders");
+
+  box.innerHTML = "";
+
+  var pending = [];
+
+  Object.keys(db.users)
+    .forEach(function(name){
+
+      db.users[name]
+        .history
+        .forEach(function(t){
+
+          if(t.status === "pending"){
+
+            pending.push({
+              user:name,
+              t:t
+            });
+
+          }
+
+        });
+
+    });
+
+
+  if(!pending.length){
+
+    box.innerHTML =
+      '<div style="text-align:center;color:#777;padding:30px">' +
+      'سفارشی وجود ندارد' +
+      '</div>';
+
+    return;
+
+  }
+
+
+  pending.forEach(function(o){
+
+    var t = o.t;
+
+    var isBuy =
+      t.type === "buy";
+
+
+    box.innerHTML +=
+
+      '<div class="admin-order">' +
+
+      '<div class="line">' +
+        '<span>کاربر</span>' +
+        '<b>' +
+          esc(o.user) +
+        '</b>' +
+      '</div>' +
+
+      '<div class="line">' +
+        '<span>نوع</span>' +
+        '<b>' +
+          (isBuy ? "خرید" : "فروش") +
+        '</b>' +
+      '</div>' +
+
+      '<div class="line">' +
+        '<span>تعداد</span>' +
+        '<b>' +
+          fmt(t.tokens) +
+          ' T' +
+        '</b>' +
+      '</div>' +
+
+      '<div class="line">' +
+        '<span>کد / کارت</span>' +
+        '<b style="direction:ltr">' +
+          esc(
+            isBuy
+              ? t.tracking
+              : t.card
+          ) +
+        '</b>' +
+      '</div>' +
+
+      '<div class="acts">' +
+
+        '<button class="btn" ' +
+        'style="background:var(--green)" ' +
+        'onclick="resolveOrder(\'' +
+        esc(o.user) +
+        '\',\'' +
+        esc(t.id) +
+        '\',\'approve\')">' +
+        'تایید' +
+        '</button>' +
+
+        '<button class="btn" ' +
+        'style="background:var(--red)" ' +
+        'onclick="resolveOrder(\'' +
+        esc(o.user) +
+        '\',\'' +
+        esc(t.id) +
+        '\',\'reject\')">' +
+        'رد' +
+        '</button>' +
+
+      '</div>' +
+
+      '</div>';
+
+  });
+
+}
+
+
+/* =========================
+   RESOLVE ORDER
+========================= */
+
+function resolveOrder(
+  username,
+  id,
+  action
+){
+
+  var rec =
+    db.users[username];
+
+  if(!rec) return;
+
+  var t =
+    rec.history.find(
+      function(x){
+        return x.id === id;
+      }
+    );
+
+  if(!t) return;
+
+  t.status =
+    action === "approve"
+      ? "approved"
+      : "rejected";
+
+
+  if(
+    action === "approve" &&
+    t.type === "buy"
+  ){
+
+    rec.tokens += t.tokens;
+
+  }
+
+
+  if(
+    action === "reject" &&
+    t.type === "sell"
+  ){
+
+    rec.tokens += t.tokens;
+
+  }
+
+
+  saveDB();
+
+  renderAdmin();
+
+  renderAll();
+
+  toast("عملیات انجام شد ✓");
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadDB();
+
+bind();
+
+var savedSession =
+  localStorage.getItem(
+    SESSION_KEY
+  );
+
+if(
+  savedSession &&
+  db.users[savedSession]
+){
+
+  startSession(savedSession);
+
+}
+</script>
+
+</body>
+</html>
